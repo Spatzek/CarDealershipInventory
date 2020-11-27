@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CarDealershipInventory.Core.Entity\CarDealershipInventory.Core.Entity.csproj" />
+    <ProjectReference Include="..\CarDealershipInventory.Infrastructure.Data\CarDealershipInventory.Infrastructure.Data.csproj" />
+  </ItemGroup>
+
+</Project>
