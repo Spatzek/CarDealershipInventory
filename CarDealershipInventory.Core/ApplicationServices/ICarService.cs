@@ -7,6 +7,6 @@ namespace CarDealershipInventory.Core.ApplicationServices
 {
     public interface ICarService
     {
-
+        public List<Car> GetAllCars();
     }
 }
