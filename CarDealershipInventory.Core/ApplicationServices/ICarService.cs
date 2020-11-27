@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CarDealershipInventory.Core.DomainServices
+namespace CarDealershipInventory.Core.ApplicationServices
 {
-    public interface ICarRepository
+    public interface ICarService
     {
 
     }

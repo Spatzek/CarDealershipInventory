@@ -10,6 +10,7 @@ namespace CarDealershipInventory.Core.Entity
         public string Name { get; set; }
         public Manufacturer Manufacturer { get; set; }
         public int ManufacturerId { get; set; }
+        public List<Car> Cars { get; set; }
 
     }
 }
