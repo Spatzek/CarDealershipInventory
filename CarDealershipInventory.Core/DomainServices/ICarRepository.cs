@@ -5,8 +5,11 @@ using System.Text;
 
 namespace CarDealershipInventory.Core.DomainServices
 {
+
     public interface ICarRepository
     {
-
+        public List<Car> ReadAllCars();
     }
+
+    
 }

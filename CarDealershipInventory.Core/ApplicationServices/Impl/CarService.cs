@@ -14,5 +14,10 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
         {
             _carRepository = carRepository;
         }
+
+        public List<Car> GetAllCars()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

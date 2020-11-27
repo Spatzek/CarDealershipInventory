@@ -14,5 +14,10 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         {
             _ctx = ctx;
         }
+
+        public List<Car> ReadAllCars()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
