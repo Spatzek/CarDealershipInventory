@@ -17,6 +17,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             {
                 Name = "Kia"
             }).Entity;
+            ctx.SaveChanges();
 
             Model picanto = ctx.Models.Add(new Model
             {
@@ -29,6 +30,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Name = "Ceed",
                 Manufacturer = kia
             }).Entity;
+            ctx.SaveChanges();
 
             Car car1 = ctx.Cars.Add(new Car
             {
@@ -41,6 +43,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Key = 2,
                 Model = ceed
             }).Entity;
+            ctx.SaveChanges();
         }
     }
 }

@@ -2,7 +2,9 @@
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarDealershipInventory.Infrastructure.Data.Repositories
 {
@@ -17,7 +19,9 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
 
         public List<Car> ReadAllCars()
         {
-            throw new NotImplementedException();
+            return _ctx.Cars
+                .Include(c => c.Model)
+                .ToList();
         }
     }
 }
