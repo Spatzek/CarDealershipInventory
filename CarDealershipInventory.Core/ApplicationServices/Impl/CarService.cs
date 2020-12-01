@@ -29,5 +29,16 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             }
             return carList;
         }
+
+        public Car GetCarById(int id)
+        {
+            Car car = _carRepository.ReadCarById(id);
+
+            if(car == null)
+            {
+                throw new NullReferenceException("Car was not found");
+            }
+            return car;
+        }
     }
 }

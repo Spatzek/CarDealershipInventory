@@ -23,5 +23,12 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
                 .Include(c => c.Model)
                 .ToList();
         }
+
+        public Car ReadCarById(int id)
+        {
+            return _ctx.Cars
+                .Include(c => c.Model)
+                .FirstOrDefault(c => c.CarId == id);
+        }
     }
 }
