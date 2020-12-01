@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using CarDealershipInventory.Core;
 using Xunit;
+using System.Linq;
 using CarDealershipInventory.Core.ApplicationServices.Impl;
 using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.ApplicationServices;
@@ -20,6 +21,7 @@ namespace CarDealershipInventory.Test
         {
             repoMock = new Mock<ICarRepository>();
             repoMock.Setup(repo => repo.ReadAllCars()).Returns(() => cars);
+            repoMock.Setup(repo => repo.ReadCarById(It.IsAny<int>())).Returns((int id) => cars.FirstOrDefault(c => c.CarId == id));
         }
 
         [Fact]
@@ -68,5 +70,50 @@ namespace CarDealershipInventory.Test
             Assert.Equal("Car list is null", ex.Message);
             Assert.Null(cars);
         }
+
+        [Theory]
+        [InlineData(1, 1)]
+        [InlineData(2, 5)]
+        [InlineData(3, 3)]
+        public void GetCarById(int carId, int modelId)
+        {
+            cars = new List<Car>();
+
+            cars.Add(new Car { CarId = carId, ModelId = modelId });
+            cars.Add(new Car { CarId = carId, ModelId = modelId });
+            cars.Add(new Car { CarId = carId, ModelId = modelId });
+
+            ICarService carService = new CarService(repoMock.Object);
+
+            Car car = carService.GetCarById(carId);
+
+            Assert.Equal(modelId, car.ModelId);
+            Assert.Equal(carId, car.CarId);
+
+            repoMock.Verify(repo => repo.ReadCarById(carId), Times.Once);
+        }
+
+        [Fact]
+        public void GetCarById_CarIsNotFound_ExpectNullReferenceException()
+        {
+            cars = new List<Car>();
+
+            cars.Add(new Car { CarId = 1, ModelId = 1 });
+            cars.Add(new Car { CarId = 2, ModelId = 2 });
+            cars.Add(new Car { CarId = 3, ModelId = 3 });
+
+            ICarService carService = new CarService(repoMock.Object);
+
+            Car car = null;
+
+            var ex = Assert.Throws<NullReferenceException>(() =>
+            {
+                car = carService.GetCarById(4);
+
+            });
+            Assert.Equal("Car was not found", ex.Message);
+            Assert.Null(car);
+        }
+
     }
 }

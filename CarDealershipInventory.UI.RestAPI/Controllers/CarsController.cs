@@ -31,9 +31,9 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // GET api/<CarsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Car> Get(int id)
         {
-            return "value";
+            return Ok(_carService.GetCarById(id));
         }
 
         // POST api/<CarsController>
