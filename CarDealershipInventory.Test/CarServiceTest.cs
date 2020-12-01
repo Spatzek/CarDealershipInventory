@@ -22,19 +22,19 @@ namespace CarDealershipInventory.Test
             repoMock.Setup(repo => repo.ReadAllCars()).Returns(() => cars);
         }
 
-        //[Fact]
-        //public void CreateCarService_RepositoryIsNull_ExpectArgumentException()
-        //{
-        //    CarService carService = null;
+        [Fact]
+        public void CreateCarService_RepositoryIsNull_ExpectArgumentException()
+        {
+            CarService carService = null;
 
-        //    var ex = Assert.Throws<ArgumentException>(() =>
-        //      {
-        //          carService = new CarService(null);
+            var ex = Assert.Throws<ArgumentException>(() =>
+              {
+                  carService = new CarService(null);
 
-        //      });
-        //    Assert.Equal("Car repository is missing", ex.Message);
-        //    Assert.Null(carService);
-        //}
+              });
+            Assert.Equal("Car repository is missing", ex.Message);
+            Assert.Null(carService);
+        }
 
 
         [Theory]
@@ -55,6 +55,18 @@ namespace CarDealershipInventory.Test
             repoMock.Verify(repo => repo.ReadAllCars(), Times.Once);
         }
 
+        [Fact]
+        public void GetAllCars_ListIsNull_ExpectNullReferenceException()
+        {
+            ICarService carService = new CarService(repoMock.Object);
 
+            var ex = Assert.Throws<NullReferenceException>(() =>
+            {
+                carService.GetAllCars();
+
+            });
+            Assert.Equal("Car list is null", ex.Message);
+            Assert.Null(cars);
+        }
     }
 }
