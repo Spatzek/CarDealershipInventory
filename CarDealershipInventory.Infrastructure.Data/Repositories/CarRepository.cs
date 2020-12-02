@@ -20,14 +20,18 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         public List<Car> ReadAllCars()
         {
             return _ctx.Cars
+                .AsNoTracking()
                 .Include(c => c.Model)
+                .ThenInclude(m => m.Manufacturer)
                 .ToList();
         }
 
         public Car ReadCarById(int id)
         {
             return _ctx.Cars
+                .AsNoTracking()
                 .Include(c => c.Model)
+                .ThenInclude(m => m.Manufacturer)
                 .FirstOrDefault(c => c.CarId == id);
         }
     }
