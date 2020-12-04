@@ -18,7 +18,26 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
 
         public void ValidateCar(Car car)
         {
-
+            ValidateCarModel(car.ModelId);
+            ValidateNumberIsNonNegative(car.Key, "Key number");
         }
+
+        public void ValidateCarModel(int modelId)
+        {            
+            if (_modelRepository.ReadModelById(modelId) == null)
+            {
+                throw new ArgumentException("Model with that ModelId was not found");
+            }
+        }
+
+        public void ValidateNumberIsNonNegative(int number, string property)
+        {
+            if (number < 0)
+            {
+                throw new ArgumentException($"{property} can not be negative");
+            }
+        }
+
+
     }
 }

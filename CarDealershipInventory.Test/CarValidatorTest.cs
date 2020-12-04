@@ -50,6 +50,20 @@ namespace CarDealershipInventory.Test
             modelRepoMock.Verify(repo => repo.ReadModelById(car.ModelId), Times.Once);
         }
 
+        //[Fact]
+        //public void ValidateCar_KeyIsNegative_ExpectArgumentException()
+        //{
+        //    CarValidator validator = new CarValidator(modelRepoMock.Object, carRepoMock.Object);
+        //    Car car = new Car { Key = -1 };
+
+        //    var ex = Assert.Throws<ArgumentException>(() =>
+        //    {
+        //        validator.ValidateCar(car);
+        //    });
+        //    Assert.Equal("Key number can not be negative", ex.Message);
+        //}
+        
+
 
 
 
