@@ -8,5 +8,7 @@ namespace CarDealershipInventory.Core.DomainServices
     public interface IManufacturerRepository
     {
         public List<Manufacturer> ReadAllManufacturers();
+        public Manufacturer ReadManufacturerById(int id);
+
     }
 }

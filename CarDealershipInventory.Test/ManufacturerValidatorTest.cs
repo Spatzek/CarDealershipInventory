@@ -33,7 +33,7 @@ namespace CarDealershipInventory.Test
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void ValidateManufacturer_WithWrongValues_ExpectArgumentException(string name)
+        public void ValidateManufacturer_WithInvalidName_ExpectArgumentException(string name)
         {
             manufacturer.Name = name;
             var ex = Assert.Throws<ArgumentException>(() =>
