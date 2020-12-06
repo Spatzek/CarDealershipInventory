@@ -56,6 +56,8 @@ namespace CarDealershipInventory.UI.RestAPI
 
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<ICarService, CarService>();
+            services.AddScoped<IModelRepository, ModelRepository>();
+            services.AddScoped<IModelService, ModelService>();
             services.AddTransient<IDataInitializer, DataInitializer>();
 
             services.AddControllers();
