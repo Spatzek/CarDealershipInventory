@@ -29,9 +29,9 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // GET api/<ModelsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<Model> Get(int id)
         {
-            return "value";
+            return Ok(_modelService.GetModelById(id));
         }
 
         // POST api/<ModelsController>
@@ -48,8 +48,9 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // DELETE api/<ModelsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Model> Delete(int id)
         {
+            return Ok(_modelService.DeleteModel(id));
         }
     }
 }

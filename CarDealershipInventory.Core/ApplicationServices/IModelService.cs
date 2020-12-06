@@ -8,6 +8,7 @@ namespace CarDealershipInventory.Core.ApplicationServices
     public interface IModelService
     {
         public List<Model> GetAllModels();
-        public Model GetModelById();
+        public Model GetModelById(int id);
+        public Model DeleteModel(int id);
     }
 }

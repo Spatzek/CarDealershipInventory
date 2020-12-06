@@ -25,9 +25,32 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
                 .ToList();
         }
 
-        public Model ReadModelById()
+        public Model ReadModelById(int id)
         {
-            throw new NotImplementedException();
+            return _ctx.Models
+                .AsNoTracking()
+                .Include(m => m.Manufacturer)
+                .FirstOrDefault(m => m.ModelId == id);
+        }
+
+        public Model RemoveModel(int id)
+        {
+            Model model = ReadModelById(id);
+
+            //model.Manufacturer = null;
+
+            //List<Car> cars = _ctx.Cars.Where(m => m.ModelId == id).ToList();
+            //foreach (Car car in cars)
+            //{
+            //    car.Model = null;
+            //    car.ModelId = 0;
+            //}
+
+
+            //_ctx.Models.Remove(model);
+            //_ctx.SaveChanges();
+
+            return model;
         }
     }
 }

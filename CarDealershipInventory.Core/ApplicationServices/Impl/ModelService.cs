@@ -20,6 +20,18 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             _modelRepository = modelRepository;
         }
 
+        public Model DeleteModel(int id)
+        {
+            if(id == 0)
+            {
+                throw new ArgumentException("ModelId cannot be 0");
+            }
+            else if (_modelRepository.ReadModelById(id) == null)
+            {
+                throw new InvalidOperationException("Attempted to remove non-existing model");
+            }
+            return _modelRepository.RemoveModel(id);
+        }
 
         public List<Model> GetAllModels()
         {
@@ -33,9 +45,15 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             return modelList;
         }
 
-        public Model GetModelById()
+        public Model GetModelById(int id)
         {
-            throw new NotImplementedException();
+            Model model = _modelRepository.ReadModelById(id);
+            
+            if(model == null)
+            {
+                throw new NullReferenceException("Model was not found");
+            }
+            return model;
         }
     }
 }

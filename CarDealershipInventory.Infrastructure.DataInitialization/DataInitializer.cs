@@ -55,6 +55,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Name = "Picanto",
                 Manufacturer = kia
             }).Entity;
+            ctx.SaveChanges();
 
             Model ceed = ctx.Models.Add(new Model
             {

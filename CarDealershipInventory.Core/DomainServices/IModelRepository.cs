@@ -8,6 +8,7 @@ namespace CarDealershipInventory.Core.DomainServices
     public interface IModelRepository
     {
         public List<Model> ReadAllModels();
-        public Model ReadModelById();
+        public Model ReadModelById(int id);
+        public Model RemoveModel(int id);
     }
 }
