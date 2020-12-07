@@ -106,14 +106,42 @@ namespace CarDealershipInventory.Test
             IModelService modelService = new ModelService(repoMock.Object);
 
             Model model = null;
+            int id = 4;
 
             var ex = Assert.Throws<NullReferenceException>(() =>
             {
-                model = modelService.GetModelById(4);
+                model = modelService.GetModelById(id);
 
             });
             Assert.Equal("Model was not found", ex.Message);
             Assert.Null(model);
+
+            repoMock.Verify(repo => repo.ReadModelById(id), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void GetModelById_IdIsNegative_ExpectArgumentException(int idToSearchFor)
+        {
+            models = new List<Model>();
+
+            models.Add(new Model { ModelId = 1, ManufacturerId = 1 });
+            models.Add(new Model { ModelId = 2, ManufacturerId = 2 });
+            models.Add(new Model { ModelId = 3, ManufacturerId = 3 });
+
+            IModelService modelService = new ModelService(repoMock.Object);
+
+            Model model = null;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                model = modelService.GetModelById(idToSearchFor);
+            });
+            Assert.Equal("Model ID must be a positive integer", ex.Message);
+            Assert.Null(model);
+
+            repoMock.Verify(repo => repo.ReadModelById(idToSearchFor), Times.Never);
         }
 
         #endregion

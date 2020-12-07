@@ -47,6 +47,11 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
 
         public Model GetModelById(int id)
         {
+            if(id <= 0)
+            {
+                throw new ArgumentException("Model ID must be a positive integer");
+            }
+
             Model model = _modelRepository.ReadModelById(id);
             
             if(model == null)
