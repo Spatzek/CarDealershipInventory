@@ -1,7 +1,9 @@
 ﻿using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CarDealershipInventory.Infrastructure.Data.Repositories
@@ -17,12 +19,17 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
 
         public List<Manufacturer> ReadAllManufacturers()
         {
-            throw new NotImplementedException();
+            return _ctx.Manufacturers
+                .AsNoTracking()
+                .ToList();
         }
 
         public Manufacturer ReadManufacturerById(int id)
         {
-            throw new NotImplementedException();
+            return _ctx.Manufacturers
+                .AsNoTracking()
+                .Include(m => m.Models)
+                .FirstOrDefault(m => m.ManufacturerId == id);
         }
 
         public Manufacturer RemoveManufacturer(int id)
