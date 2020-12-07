@@ -119,6 +119,59 @@ namespace CarDealershipInventory.Test
 
             repoMock.Verify(repo => repo.ReadCarById(carId), Times.Once);
         }
+        #region DeleteModel
+        [Fact]
+        public void DeleteCar_ExistingCar()
+        {
+            cars = new List<Car>();
+
+            Car car = new Car { CarId = 1 };
+
+            cars.Add(car);
+
+
+            ICarService carService = new CarService(repoMock.Object);
+
+            carService.DeleteCar(car.CarId);
+
+
+            repoMock.Verify(repo => repo.RemoveCar(It.Is<int>(m => m == car.CarId)), Times.Once);
+        }
+        [Fact]
+        public void DeleteCar_CarIdIsZeroOrNegative_ExpectArgumentException()
+        {
+            ICarService carService = new CarService(repoMock.Object);
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                carService.DeleteCar(-1);
+
+            });
+
+            Assert.Equal("CarId cannot be less than 1", ex.Message);
+            repoMock.Verify(repo => repo.RemoveCar(It.Is<int>(m => m == -1)), Times.Never);
+        }
+
+        [Fact]
+        public void DeleteCar_NonExistingCar_ExpectInvalidOperationException()
+        {
+            cars = new List<Car>();
+
+            Car car = new Car { CarId = 1 };
+
+            ICarService carService = new CarService(repoMock.Object);
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                carService.DeleteCar(car.CarId);
+
+            });
+
+
+            Assert.Equal("Attempted to remove non-existing car", ex.Message);
+            repoMock.Verify(repo => repo.RemoveCar(It.Is<int>(m => m == car.CarId)), Times.Never);
+        }
 
     }
 }
+#endregion

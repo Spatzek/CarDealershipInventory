@@ -9,5 +9,6 @@ namespace CarDealershipInventory.Core.ApplicationServices
     {
         public List<Car> GetAllCars();
         public Car GetCarById(int id);
+        public Car DeleteCar(int carId);
     }
 }
