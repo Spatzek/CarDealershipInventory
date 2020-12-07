@@ -138,18 +138,18 @@ namespace CarDealershipInventory.Test
         }
 
         [Fact]
-        public void DeleteModel_ModelIdIsZero_ExpectArgumentException()
+        public void DeleteModel_ModelIdIsZeroOrNegative_ExpectArgumentException()
         {
             IModelService modelService = new ModelService(repoMock.Object);
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                modelService.DeleteModel(0);
+                modelService.DeleteModel(-1);
 
             });
 
-            Assert.Equal("ModelId cannot be 0", ex.Message);
-            repoMock.Verify(repo => repo.RemoveModel(It.Is<int>(m => m == 0)), Times.Never);
+            Assert.Equal("ModelId cannot be less than 1", ex.Message);
+            repoMock.Verify(repo => repo.RemoveModel(It.Is<int>(m => m == -1)), Times.Never);
         }
 
         [Fact]

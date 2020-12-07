@@ -22,9 +22,9 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
 
         public Model DeleteModel(int id)
         {
-            if(id == 0)
+            if(id < 1)
             {
-                throw new ArgumentException("ModelId cannot be 0");
+                throw new ArgumentException("ModelId cannot be less than 1");
             }
             else if (_modelRepository.ReadModelById(id) == null)
             {
