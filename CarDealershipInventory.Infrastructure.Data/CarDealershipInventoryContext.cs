@@ -25,7 +25,7 @@ namespace CarDealershipInventory.Infrastructure.Data
             modelBuilder.Entity<Model>()
                 .HasOne(m => m.Manufacturer)
                 .WithMany(m => m.Models)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
