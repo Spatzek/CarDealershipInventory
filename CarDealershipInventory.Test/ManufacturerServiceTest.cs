@@ -23,7 +23,7 @@ namespace CarDealershipInventory.Test
             repoMock.Setup(repo => repo.ReadManufacturerById(It.IsAny<int>()))
                 .Returns((int id) => manufacturers.FirstOrDefault(m => m.ManufacturerId == id));
             repoMock.Setup(repo => repo.RemoveManufacturer(It.IsAny<int>()))
-                .Callback<int>((id) => manufacturers.Remove(new Manufacturer() { ManufacturerId = id }));
+                .Callback<int>((id) => manufacturers.RemoveAll(m => m.ManufacturerId == id));
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace CarDealershipInventory.Test
 
             Assert.Equal(manufacturer.ManufacturerId, id);
             Assert.Equal(manufacturer.Name, name);
-            repoMock.Verify(repo => repo.ReadManufacturerById(id), Times.Once);
+            repoMock.Verify(repo => repo.ReadManufacturerById(It.IsAny<int>()), Times.Once);
         }
 
         [Theory]
@@ -115,10 +115,10 @@ namespace CarDealershipInventory.Test
                 manufacturer = service.GetManufacturerById(id);
             });
 
-            Assert.Equal("Manufacturer ID must be a positive integer", ex.Message);
+            Assert.Equal("ID of the manufacturer to find must be a positive integer", ex.Message);
             Assert.Null(manufacturer);
 
-            repoMock.Verify(repo => repo.ReadManufacturerById(id), Times.Never);
+            repoMock.Verify(repo => repo.ReadManufacturerById(It.IsAny<int>()), Times.Never);
         }
 
         [Theory]
@@ -141,11 +141,96 @@ namespace CarDealershipInventory.Test
                 manufacturer = service.GetManufacturerById(id);
             });
 
-            Assert.Equal("Manufacturer with this ID does not exist", ex.Message);
+            Assert.Equal("Manufacturer with this ID not found", ex.Message);
             Assert.Null(manufacturer);
 
-            repoMock.Verify(repo => repo.ReadManufacturerById(id), Times.Once);
+            repoMock.Verify(repo => repo.ReadManufacturerById(It.IsAny<int>()), Times.Once);
         }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void DeleteManufacturer(int id)
+        {
+            manufacturers = new List<Manufacturer>()
+            {
+                new Manufacturer { ManufacturerId = 1 },
+                new Manufacturer { ManufacturerId = 2 },
+                new Manufacturer { ManufacturerId = 3 },
+            };
+
+            Assert.Equal(3, manufacturers.Count);
+            Assert.True(manufacturers.Exists(m => m.ManufacturerId == id));
+
+            IManufacturerService service = new ManufacturerService(repoMock.Object);
+
+            Manufacturer manufacturer = service.DeleteManufacturer(id);
+
+            Assert.Equal(2, manufacturers.Count);            
+            Assert.False(manufacturers.Exists(m => m.ManufacturerId == id));
+
+            repoMock.Verify(repo => repo.RemoveManufacturer(It.IsAny<int>()), Times.Once);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        public void DeleteManufacturer_IdIsNotPositive_ExpectArgumentException(int id)
+        {
+            manufacturers = new List<Manufacturer>()
+            {
+                new Manufacturer { ManufacturerId = 1 },
+                new Manufacturer { ManufacturerId = 2 },
+                new Manufacturer { ManufacturerId = 3 },
+            };
+
+            Assert.Equal(3, manufacturers.Count);
+
+            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            Manufacturer manufacturer = null;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                manufacturer = service.DeleteManufacturer(id);
+            });
+
+            Assert.Equal(3, manufacturers.Count);
+            Assert.Null(manufacturer);           
+            Assert.Equal("ID of the manufacturer to delete must be a positive integer", ex.Message);
+
+            repoMock.Verify(repo => repo.RemoveManufacturer(It.IsAny<int>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5)]
+        public void DeleteManufacturer_NoManufacturerWithId_ExpectInvalidOperationException(int id)
+        {
+            manufacturers = new List<Manufacturer>()
+            {
+                new Manufacturer { ManufacturerId = 2 },
+                new Manufacturer { ManufacturerId = 3 },
+                new Manufacturer { ManufacturerId = 4 },
+            };
+
+            Assert.Equal(3, manufacturers.Count);
+
+            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            Manufacturer manufacturer = null;
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                manufacturer = service.DeleteManufacturer(id);
+            });
+
+            Assert.Equal(3, manufacturers.Count);
+            Assert.Null(manufacturer);
+            Assert.Equal("Can not delete manufacturer as no manufacturer with this ID can be found", ex.Message);
+
+            repoMock.Verify(repo => repo.RemoveManufacturer(It.IsAny<int>()), Times.Never);
+        }
+        
 
 
     }

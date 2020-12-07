@@ -33,20 +33,29 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
         {
             if (id <= 0)
             {
-                throw new ArgumentException("Manufacturer ID must be a positive integer");
+                throw new ArgumentException("ID of the manufacturer to find must be a positive integer");
             }
 
             Manufacturer manufacturer = _manuRepository.ReadManufacturerById(id);
             if (manufacturer == null)
             {
-                throw new NullReferenceException("Manufacturer with this ID does not exist");
+                throw new NullReferenceException("Manufacturer with this ID not found");
             }
             return manufacturer;
         }
 
         public Manufacturer DeleteManufacturer(int id)
         {
-            throw new NotImplementedException();
+            if(id <= 0 )
+            {
+                throw new ArgumentException("ID of the manufacturer to delete must be a positive integer");
+            }
+            if (_manuRepository.ReadManufacturerById(id) == null)
+            {
+                throw new InvalidOperationException("Can not delete manufacturer as no manufacturer with this ID can be found");
+            }
+            Manufacturer manufacturer = _manuRepository.RemoveManufacturer(id);
+            return manufacturer;
         }
     }
 }
