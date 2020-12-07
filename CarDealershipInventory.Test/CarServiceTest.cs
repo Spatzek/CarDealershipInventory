@@ -69,6 +69,8 @@ namespace CarDealershipInventory.Test
             });
             Assert.Equal("Car list is null", ex.Message);
             Assert.Null(cars);
+
+            repoMock.Verify(repo => repo.ReadAllCars(), Times.Once);
         }
 
         [Theory]
@@ -105,14 +107,17 @@ namespace CarDealershipInventory.Test
             ICarService carService = new CarService(repoMock.Object);
 
             Car car = null;
+            int carId = 4;
 
             var ex = Assert.Throws<NullReferenceException>(() =>
             {
-                car = carService.GetCarById(4);
+                car = carService.GetCarById(carId);
 
             });
             Assert.Equal("Car was not found", ex.Message);
             Assert.Null(car);
+
+            repoMock.Verify(repo => repo.ReadCarById(carId), Times.Once);
         }
 
     }
