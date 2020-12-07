@@ -24,7 +24,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             List<Manufacturer> manufacturers = _manufacturerRepository.ReadAllManufacturers();
             foreach (var manu in manufacturers)
             {
-                if (manu.Name.ToLower().Trim().Equals(manufacturer.Name.ToLower().Trim()))
+                if (manu.Name.ToLower().Trim().Equals(manufacturer.Name.ToLower().Trim()) && manu.ManufacturerId != manufacturer.ManufacturerId)
                 {
                     throw new ArgumentException("Name is already used by another manufacturer");
                 }

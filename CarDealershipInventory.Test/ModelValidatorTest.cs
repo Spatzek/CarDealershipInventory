@@ -30,16 +30,18 @@ namespace CarDealershipInventory.Test
                 new Manufacturer{ Name = "Peugeot", ManufacturerId = 2},
                 new Manufacturer{ Name = "Skoda", ManufacturerId = 3}
             };
-            model = new Model();
+            model = new Model { ModelId = 1 };
             validator = new ModelValidator(modelRepoMock.Object, manufacturerRepoMock.Object);
             models = new List<Model>()
             {
-                new Model{ Name = "107", ManufacturerId = 2},
-                new Model{ Name = "207", ManufacturerId = 2},
-                new Model{ Name = "107", ManufacturerId = 3},
-                new Model{ Name = "307", ManufacturerId = 2}
+                new Model{ ModelId = 2, Name = "107", ManufacturerId = 2},
+                new Model{ ModelId = 3, Name = "207", ManufacturerId = 2},
+                new Model{ ModelId = 4, Name = "107", ManufacturerId = 3},
+                new Model{ ModelId = 5, Name = "307", ManufacturerId = 2}
             };
+            models.Add(model);
         }
+
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -54,8 +56,9 @@ namespace CarDealershipInventory.Test
 
             modelRepoMock.Verify(repo => repo.ReadAllModels(), Times.Never);
         }
+
         [Fact]
-        public void ValidateModel_manufacturerNotInDatabase_ExpectArgumentException()
+        public void ValidateModel_ManufacturerNotInDatabase_ExpectArgumentException()
         {
             model.Name = "ceed";
             model.ManufacturerId = 4;
@@ -83,6 +86,24 @@ namespace CarDealershipInventory.Test
 
             modelRepoMock.Verify(repo => repo.ReadAllModels(), Times.Once);
         }
+
+        // tests that a model can still be updated and keep the same name without throwing exception
+        // because that name is already in the database
+        [Theory]
+        [InlineData("107")]
+        [InlineData(" 107 ")]
+        public void ValidateModel_AlreadyExistsWithName_ShouldPass(string name)
+        {
+            model.Name = name;
+            model.ManufacturerId = 2;
+            model.ModelId = 2;
+            
+            validator.ValidateModel(model);
+           
+            modelRepoMock.Verify(repo => repo.ReadAllModels(), Times.Once);
+        }
+
+
 
 
     }

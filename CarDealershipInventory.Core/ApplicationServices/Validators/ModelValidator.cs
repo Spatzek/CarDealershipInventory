@@ -30,7 +30,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             List<Model> models = _modelRepository.ReadAllModels();
             foreach (var mod in models)
             {
-                if (mod.ManufacturerId == model.ManufacturerId && mod.Name.ToLower().Trim().Equals(model.Name.ToLower().Trim()))
+                if (mod.ManufacturerId == model.ManufacturerId && mod.Name.ToLower().Trim().Equals(model.Name.ToLower().Trim()) && mod.ModelId != model.ModelId)
                 {
                     throw new ArgumentException("Name is already used by another model of the same manufacturer");
                 }

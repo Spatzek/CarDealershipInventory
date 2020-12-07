@@ -22,11 +22,12 @@ namespace CarDealershipInventory.Test
             manuRepoMock.Setup(repo => repo.ReadAllManufacturers()).Returns(() => manufacturers);
             manufacturers = new List<Manufacturer>()
             {
-                new Manufacturer{ Name = "Toyota"},
-                new Manufacturer{ Name = "Peugeot"},
-                new Manufacturer{ Name = "Skoda"}
+                new Manufacturer{ ManufacturerId = 1, Name = "Toyota"},
+                new Manufacturer{ ManufacturerId = 2, Name = "Peugeot"},
+                new Manufacturer{ ManufacturerId = 3, Name = "Skoda"}
             };
-            manufacturer = new Manufacturer();
+            manufacturer = new Manufacturer { ManufacturerId = 4 };
+            manufacturers.Add(manufacturer);
             validator = new ManufacturerValidator(manuRepoMock.Object);
         }
 
@@ -57,6 +58,22 @@ namespace CarDealershipInventory.Test
                 validator.ValidateManufacturer(manufacturer);
             });
             Assert.Equal("Name is already used by another manufacturer", ex.Message);
+           
+            manuRepoMock.Verify(repo => repo.ReadAllManufacturers(), Times.Once);
+        }
+
+        // tests that a manufacturer can still be updated and keep the same name without throwing exception
+        // because that name is already in the database
+        [Theory]
+        [InlineData("Peugeot")]
+        [InlineData("PEUGEOT")]
+        [InlineData(" Peugeot ")]
+        public void ValidateManufacturer_AlreadyExistsWithSameName_ShouldPass(string name)
+        {
+            manufacturer.Name = name;
+            manufacturer.ManufacturerId = 2;
+
+            validator.ValidateManufacturer(manufacturer);
 
             manuRepoMock.Verify(repo => repo.ReadAllManufacturers(), Times.Once);
         }
