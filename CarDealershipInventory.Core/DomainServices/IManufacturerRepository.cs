@@ -9,6 +9,7 @@ namespace CarDealershipInventory.Core.DomainServices
     {
         public List<Manufacturer> ReadAllManufacturers();
         public Manufacturer ReadManufacturerById(int id);
+        public Manufacturer RemoveManufacturer(int id);
 
     }
 }
