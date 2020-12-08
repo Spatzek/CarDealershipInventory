@@ -11,6 +11,7 @@ namespace CarDealershipInventory.Core.DomainServices
         public List<Car> ReadAllCars();
 
         public Car ReadCarById(int id);
+        
     }
 
     

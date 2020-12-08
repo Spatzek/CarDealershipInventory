@@ -36,8 +36,9 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // POST api/<ModelsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Model> Post([FromBody] Model model)
         {
+            return Ok(_modelService.CreateModel(model));
         }
 
         // PUT api/<ModelsController>/5

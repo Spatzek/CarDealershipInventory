@@ -1,4 +1,6 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators;
+using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
@@ -9,8 +11,9 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
     public class ModelService : IModelService
     {
         private IModelRepository _modelRepository;
+        private IModelValidator _modelValidator;
 
-        public ModelService(IModelRepository modelRepository)
+        public ModelService(IModelRepository modelRepository, IModelValidator modelValidator)
         {
             if(modelRepository == null)
             {
@@ -18,6 +21,35 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             }
             
             _modelRepository = modelRepository;
+            _modelValidator = modelValidator;
+        }
+
+        public Model CreateModel(Model model)
+        {
+            List<Model> models = _modelRepository.ReadAllModels();
+
+            if(model == null)
+            {
+                throw new ArgumentException("Model is missing");
+            }
+            
+            if(models != null)
+            { 
+                foreach (Model m in models)
+                {
+                    if(model.ModelId == m.ModelId && model.Name == m.Name && model.ManufacturerId == m.ManufacturerId)
+                    {
+                        throw new InvalidOperationException("Model already exist");
+                    }
+                }
+            }
+            
+            if(_modelValidator != null)
+            {
+                _modelValidator.ValidateModel(model);
+            }
+
+            return _modelRepository.AddModel(model);
         }
 
         public Model DeleteModel(int id)

@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace CarDealershipInventory.Core.ApplicationServices.Validators
 {
-    public class CarValidator
+    public class CarValidator : ICarValidator
     {
         private ICarRepository _carRepository;
         private IModelRepository _modelRepository;
