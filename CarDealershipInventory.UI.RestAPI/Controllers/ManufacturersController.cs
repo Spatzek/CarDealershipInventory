@@ -67,8 +67,20 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // DELETE api/<ManufacturersController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Manufacturer> Delete(int id)
         {
+            try
+            {
+                return Ok(_manuService.DeleteManufacturer(id));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

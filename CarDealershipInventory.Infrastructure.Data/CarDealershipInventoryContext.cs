@@ -20,12 +20,14 @@ namespace CarDealershipInventory.Infrastructure.Data
             modelBuilder.Entity<Car>()
                 .HasOne(c => c.Model)
                 .WithMany(m => m.Cars)
+                .HasForeignKey(c => new { c.ModelId })
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Model>()
                 .HasOne(m => m.Manufacturer)
                 .WithMany(m => m.Models)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(m => new { m.ManufacturerId })
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
