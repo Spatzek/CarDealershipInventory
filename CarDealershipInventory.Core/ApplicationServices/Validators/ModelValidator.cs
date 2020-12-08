@@ -23,6 +23,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             {
                 throw new ArgumentException("Model must have a name");
             }
+            //if (model.ManufacturerId.HasValue && _manufacturerRepository.ReadManufacturerById(model.ManufacturerId.Value) == null)
             if (_manufacturerRepository.ReadManufacturerById(model.ManufacturerId) == null)
             {
                 throw new ArgumentException("Manufacturer does not exist in the database");

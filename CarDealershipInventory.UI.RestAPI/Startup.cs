@@ -63,6 +63,8 @@ namespace CarDealershipInventory.UI.RestAPI
             services.AddScoped<IModelValidator, ModelValidator>();
             services.AddScoped<IManufacturerValidator, ManufacturerValidator>();
             services.AddScoped<ICarValidator, CarValidator>();
+            services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+            services.AddScoped<IManufacturerService, ManufacturerService>();
             services.AddTransient<IDataInitializer, DataInitializer>();
 
             services.AddControllers();
