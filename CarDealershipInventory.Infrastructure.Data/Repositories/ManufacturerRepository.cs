@@ -34,7 +34,9 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
 
         public Manufacturer RemoveManufacturer(int id)
         {
-            throw new NotImplementedException();
+            var entry = _ctx.Remove(new Manufacturer { ManufacturerId = id });
+            _ctx.SaveChanges();
+            return entry.Entity;
         }
     }
 }
