@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,26 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
     public class CarService : ICarService
     {
         private ICarRepository _carRepository;
+        private ICarValidator _carValidator;
+        
 
-        public CarService(ICarRepository carRepository)
+        public CarService(ICarRepository carRepository, ICarValidator carValidator)
         {
             if(carRepository == null)
             {
                 throw new ArgumentException("Car repository is missing");
             }    
             _carRepository = carRepository;
+            _carValidator = carValidator; //later check for null
+        }
+
+        public Car CreateCar(Car car)
+        {
+            if (_carValidator != null)
+            {
+                _carValidator.ValidateCar(car);
+            }
+            return _carRepository.CreateCar(car);
         }
 
         public List<Car> GetAllCars()
