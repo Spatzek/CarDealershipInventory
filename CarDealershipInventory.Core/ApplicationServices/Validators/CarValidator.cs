@@ -3,6 +3,7 @@ using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace CarDealershipInventory.Core.ApplicationServices.Validators
@@ -19,8 +20,19 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
 
         public void ValidateCar(Car car)
         {
+            if (car == null)
+            {
+                throw new ArgumentException("Car to validate is missing");
+            }
             ValidateCarModel(car.ModelId);
             ValidateNumberIsNonNegative(car.Key, "Key number");
+            ValidateTextIsNotNullOrEmpty(car.Location, "Location");
+            ValidateDateIsNotInFuture(car.LastInspection, "Last inspection date");
+            ValidateNumberIsNonNegative(car.Kilometers, "Kilometers");
+            ValidateProductionYear(car.ProductionYear);
+            ValidateTextIsNotNullOrEmpty(car.LicensePlate, "License plate");
+            ValidateDateIsNotInFuture(car.DateOfPurchase, "Date of purchase");
+
         }
 
         public void ValidateCarModel(int modelId)
@@ -37,6 +49,37 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             {
                 throw new ArgumentException($"{property} can not be negative");
             }
+        }
+
+        public void ValidateTextIsNotNullOrEmpty(string text, string property)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"{property} information is missing or empty");
+            }
+        }
+
+        public void ValidateDateIsNotInFuture(DateTime date, string property)
+        {
+            if (date.Date > DateTime.Today.Date)
+            {
+                throw new ArgumentException($"{property} can not be in the future");
+            }
+        }
+
+        public void ValidateProductionYear(int year)
+        {
+            int firstCar = 1880; // oldest running automobile is from 1884...
+
+            if (year < firstCar || year > DateTime.Now.Year)
+            {
+                throw new ArgumentException("Production year must in range between 1880 and this year");
+            }
+        }
+
+        public void ValidateDateOfSaleIsNotBeforeDateOfPurchase(DateTime purchaseDate, DateTime saleDate)
+        {
+            throw new NotImplementedException();
         }
 
 
