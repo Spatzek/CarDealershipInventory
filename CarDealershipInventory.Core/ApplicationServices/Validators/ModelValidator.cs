@@ -19,6 +19,10 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         }
         public void ValidateModel(Model model)
         {
+            if (model == null)
+            {
+                throw new ArgumentException("Model to validate is missing");
+            }
             if (string.IsNullOrEmpty(model.Name))
             {
                 throw new ArgumentException("Model must have a name");
