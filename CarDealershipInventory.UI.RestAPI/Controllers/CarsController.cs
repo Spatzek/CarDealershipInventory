@@ -38,8 +38,9 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // POST api/<CarsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Car> Post([FromBody] Car car)
         {
+            return Ok(_carService.CreateCar(car));
         }
 
         // PUT api/<CarsController>/5

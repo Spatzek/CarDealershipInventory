@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+CarDealershipInventory.UI.RestAPI/cardealershipinventory.db

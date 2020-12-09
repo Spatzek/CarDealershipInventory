@@ -7,6 +7,7 @@ namespace CarDealershipInventory.Core.ApplicationServices
 {
     public interface ICarService
     {
+        public Car CreateCar(Car car);
         public List<Car> GetAllCars();
         public Car GetCarById(int id);
 
