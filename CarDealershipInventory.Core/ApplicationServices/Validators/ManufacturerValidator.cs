@@ -18,6 +18,10 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
 
         public void ValidateManufacturer(Manufacturer manufacturer)
         {
+            if (manufacturer == null)
+            {
+                throw new ArgumentException("Manufacturer to validate is missing");
+            }
             if (string.IsNullOrEmpty(manufacturer.Name))
             {
                 throw new ArgumentException("Manufacturer must have a name");

@@ -31,8 +31,13 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             ValidateNumberIsNonNegative(car.Kilometers, "Kilometers");
             ValidateProductionYear(car.ProductionYear);
             ValidateTextIsNotNullOrEmpty(car.LicensePlate, "License plate");
+            ValidateDateIsNotNull(car.DateOfPurchase, "Date of purchase");
             ValidateDateIsNotInFuture(car.DateOfPurchase, "Date of purchase");
-
+            ValidateNumberIsNonNegative(car.PurchasePrice, "Purchase price");
+            ValidateNumberIsNonNegative(car.CurrentPrice, "Current price");
+            ValidateDateOfSaleIsNotBeforeDateOfPurchase(car.DateOfPurchase, car.DateOfSale);
+            ValidateNumberIsNonNegative(car.SoldPrice, "Sold price");
+            ValidateNumberIsNonNegative(car.VAT, "Value added tax");
         }
 
         public void ValidateCarModel(int modelId)
@@ -43,7 +48,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             }
         }
 
-        public void ValidateNumberIsNonNegative(int number, string property)
+        public void ValidateNumberIsNonNegative(double number, string property)
         {
             if (number < 0)
             {
@@ -59,9 +64,17 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             }
         }
 
-        public void ValidateDateIsNotInFuture(DateTime date, string property)
+        public void ValidateDateIsNotNull(DateTime? date, string property)
         {
-            if (date.Date > DateTime.Today.Date)
+            if(date == null)
+            {
+                throw new ArgumentException($"{property} must be defined");
+            }
+        }
+
+        public void ValidateDateIsNotInFuture(DateTime? date, string property)
+        {
+            if (date.HasValue && date.Value.Date > DateTime.Today.Date)
             {
                 throw new ArgumentException($"{property} can not be in the future");
             }
@@ -77,9 +90,12 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             }
         }
 
-        public void ValidateDateOfSaleIsNotBeforeDateOfPurchase(DateTime purchaseDate, DateTime saleDate)
+        public void ValidateDateOfSaleIsNotBeforeDateOfPurchase(DateTime? purchaseDate, DateTime? saleDate)
         {
-            throw new NotImplementedException();
+            if (purchaseDate.HasValue && saleDate.HasValue && purchaseDate.Value.Date > saleDate.Value.Date)
+            {
+                throw new ArgumentException("Date of sale can not precede date of purchase");
+            }
         }
 
 

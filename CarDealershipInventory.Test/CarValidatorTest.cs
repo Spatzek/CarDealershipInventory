@@ -31,7 +31,7 @@ namespace CarDealershipInventory.Test
         }
 
         [Fact]
-        public void CarIsNull_ExpectArgumentNullException()
+        public void CarIsNull_ExpectArgumentException()
         {
             car = null;
 
@@ -40,6 +40,7 @@ namespace CarDealershipInventory.Test
                 validator.ValidateCar(car);
             });
             Assert.Equal("Car to validate is missing", ex.Message);
+            Assert.Null(car);
         }
 
         [Fact]
@@ -154,6 +155,18 @@ namespace CarDealershipInventory.Test
         }
 
         [Fact]
+        public void ValidateDateIsNotNull_DateOfPurchaseIsNull_ExpectArgumentException()
+        {
+            car.DateOfPurchase = null;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateDateIsNotNull(car.DateOfPurchase, "Date of purchase");
+            });
+            Assert.Equal("Date of purchase must be defined", ex.Message);
+        }
+
+        [Fact]
         public void ValidateDateIsNotInFuture_DateOfPurchaseIsInFuture_ExpectArgumentException()
         {
             car.DateOfPurchase = DateTime.Today.Date.AddDays(1);
@@ -164,6 +177,68 @@ namespace CarDealershipInventory.Test
             });
             Assert.Equal("Date of purchase can not be in the future", ex.Message);
         }
+
+        [Fact]
+        public void ValidateNumberIsNonNegative_PurchasePriceIsNegative_ExpectArgumentException()
+        {
+            car.PurchasePrice = -0.01;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateNumberIsNonNegative(car.PurchasePrice, "Purchase price");
+            });
+            Assert.Equal("Purchase price can not be negative", ex.Message);
+        }
+
+        [Fact]
+        public void ValidateNumberIsNonNegative_CurrentPriceIsNegative_ExpectArgumentException()
+        {
+            car.CurrentPrice = -0.01;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateNumberIsNonNegative(car.CurrentPrice, "Current price");
+            });
+            Assert.Equal("Current price can not be negative", ex.Message);
+        }
+
+        [Fact]
+        public void ValidateDateOfSaleIsNotBeforeDateOfPurchase_DateOfSaleIsBeforeDatePurchase_ExpectArgumentException()
+        {
+            car.DateOfPurchase = DateTime.Today.Date;
+            car.DateOfSale = DateTime.Today.Date.AddDays(-1);
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateDateOfSaleIsNotBeforeDateOfPurchase(car.DateOfPurchase, car.DateOfSale);
+            });
+            Assert.Equal("Date of sale can not precede date of purchase", ex.Message);
+        }
+
+        [Fact]
+        public void ValidateNumberIsNonNegative_SoldPriceIsNegative_ExpectArgumentException()
+        {
+            car.SoldPrice = -0.01;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateNumberIsNonNegative(car.SoldPrice, "Sold price");
+            });
+            Assert.Equal("Sold price can not be negative", ex.Message);
+        }
+
+        [Fact]
+        public void ValidateNumberIsNonNegative_VATIsNegative_ExpectArgumentException()
+        {
+            car.VAT = -0.01;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateNumberIsNonNegative(car.VAT, "Value added tax");
+            });
+            Assert.Equal("Value added tax can not be negative", ex.Message);
+        }
+
 
 
 
