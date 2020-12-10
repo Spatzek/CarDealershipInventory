@@ -44,18 +44,15 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         {
             Model model = ReadModelById(id);
 
-            //model.Manufacturer = null;
+            List<Car> cars = _ctx.Cars.Where(m => m.ModelId == id).ToList();
+            foreach (Car car in cars)
+            {
+                int newModelid = model.ManufacturerId;
+                car.ModelId = newModelid;
+            }
 
-            //List<Car> cars = _ctx.Cars.Where(m => m.ModelId == id).ToList();
-            //foreach (Car car in cars)
-            //{
-            //    car.Model = null;
-            //    car.ModelId = 0;
-            //}
-
-
-            //_ctx.Models.Remove(model);
-            //_ctx.SaveChanges();
+            _ctx.Models.Remove(model);
+            _ctx.SaveChanges();
 
             return model;
         }
