@@ -55,8 +55,20 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // POST api/<ManufacturersController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Manufacturer> Post([FromBody] Manufacturer manufacturer)
         {
+            try
+            {
+                return Ok(_manuService.CreateManufacturer(manufacturer));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<ManufacturersController>/5

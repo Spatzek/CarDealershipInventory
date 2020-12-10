@@ -9,6 +9,8 @@ namespace CarDealershipInventory.Core.ApplicationServices
     {
         public List<Manufacturer> GetAllManufacturers();
         public Manufacturer GetManufacturerById(int id);
+        public Manufacturer CreateManufacturer(Manufacturer manufacturer);
+        public Manufacturer EditManufacturer(Manufacturer manufacturer);
         public Manufacturer DeleteManufacturer(int id);
     }
 }
