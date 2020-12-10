@@ -13,11 +13,11 @@ namespace CarDealershipInventory.Test
     public class ModelValidatorTest
     {
         private Mock<IModelRepository> modelRepoMock;
-        private List<Model> models = null;
-        private Model model = null;
-        private ModelValidator validator = null;
+        private List<Model> models;
+        private Model model;
+        private ModelValidator validator;
         private Mock<IManufacturerRepository> manufacturerRepoMock;
-        private List<Manufacturer> manufacturers = null;
+        private List<Manufacturer> manufacturers;
         public ModelValidatorTest()
         {
             modelRepoMock = new Mock<IModelRepository>();
@@ -40,6 +40,19 @@ namespace CarDealershipInventory.Test
                 new Model{ ModelId = 5, Name = "307", ManufacturerId = 2}
             };
             models.Add(model);
+        }
+
+        [Fact]
+        public void ValidateModel_ModelIsNull_ExpectArgumentException()
+        {
+            model = null;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateModel(model);
+            });
+            Assert.Equal("Model to validate is missing", ex.Message);
+            Assert.Null(model);
         }
 
         [Theory]

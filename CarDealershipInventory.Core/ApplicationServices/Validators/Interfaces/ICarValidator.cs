@@ -12,7 +12,13 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces
 
         public void ValidateCarModel(int modelId);
 
-        public void ValidateNumberIsNonNegative(int number, string property);
-        
+        public void ValidateNumberIsNonNegative(double number, string property);
+        public void ValidateTextIsNotNullOrEmpty(string text, string property);
+        public void ValidateDateIsNotInFuture(DateTime? date, string property);
+        public void ValidateDateIsNotNull(DateTime? date, string property);
+        public void ValidateProductionYear(int year);
+        public void ValidateDateOfSaleIsNotBeforeDateOfPurchase(DateTime? purchaseDate, DateTime? saleDate);
+
+
     }
 }

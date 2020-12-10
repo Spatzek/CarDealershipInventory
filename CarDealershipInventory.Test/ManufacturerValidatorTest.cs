@@ -12,9 +12,9 @@ namespace CarDealershipInventory.Test
     public class ManufacturerValidatorTest
     {
         private Mock<IManufacturerRepository> manuRepoMock;
-        private List<Manufacturer> manufacturers = null;
-        private Manufacturer manufacturer = null;
-        private ManufacturerValidator validator = null;
+        private List<Manufacturer> manufacturers;
+        private Manufacturer manufacturer;
+        private ManufacturerValidator validator;
 
         public ManufacturerValidatorTest()
         {
@@ -29,6 +29,21 @@ namespace CarDealershipInventory.Test
             manufacturer = new Manufacturer { ManufacturerId = 4 };
             manufacturers.Add(manufacturer);
             validator = new ManufacturerValidator(manuRepoMock.Object);
+        }
+
+        [Fact]
+        public void ValidateManufacturer_ManufacturerIsNull_ExpectArgumentException()
+        {
+            manufacturer = null;
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateManufacturer(manufacturer);
+            });
+            Assert.Equal("Manufacturer to validate is missing", ex.Message);
+            Assert.Null(manufacturer);
+
+            manuRepoMock.Verify(repo => repo.ReadAllManufacturers(), Times.Never);
         }
 
         [Theory]
