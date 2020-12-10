@@ -59,5 +59,13 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
 
             return model;
         }
+
+        public Model UpdateModel(Model model)
+        {
+            var updatedModel = _ctx.Models.Update(model).Entity;
+            _ctx.SaveChanges();
+
+            return updatedModel;
+        }
     }
 }

@@ -52,6 +52,32 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             return _modelRepository.AddModel(model);
         }
 
+        public Model EditModel(Model model)
+        {
+            List<Model> models = _modelRepository.ReadAllModels();
+
+            if (model == null)
+            {
+                throw new ArgumentException("Model is missing");
+            }
+
+            if (model != null)
+            {
+                Model foundModel = _modelRepository.ReadModelById(model.ModelId);
+                if (foundModel == null)
+                {
+                    throw new InvalidOperationException("Update of non-existing model");
+                }
+            }
+
+            if (_modelValidator != null)
+            {
+                _modelValidator.ValidateModel(model);
+            }
+
+            return _modelRepository.UpdateModel(model);
+        }
+
         public Model DeleteModel(int id)
         {
             if(id < 1)
