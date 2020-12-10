@@ -279,7 +279,71 @@ namespace CarDealershipInventory.Test
             
         }
         #endregion
-    
+
+        #region EditModel
+        [Theory]
+        [InlineData(1, "Ceed", 1)]
+        [InlineData(2, "Picanto", 2)]
+        public void EditModel_ValidExistingModel(int id, string name, int manufacturerId)
+        {
+            Model model = new Model()
+            {
+                ModelId = id,
+                Name = name,
+                ManufacturerId = manufacturerId,
+            };
+
+            repoMock.Setup(repo => repo.ReadModelById(It.Is<int>(m => m == model.ModelId))).Returns(() => model);
+
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+
+            modelService.EditModel(model);
+
+
+            repoMock.Verify(repo => repo.UpdateModel(It.Is<Model>(m => m == model)), Times.Once);
+        }
+
+        [Fact]
+        public void EditModel_ModelIsNull_ExpectArgumentException()
+        {
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                modelService.EditModel(null);
+            });
+
+            Assert.Equal("Model is missing", ex.Message);
+            repoMock.Verify(repo => repo.UpdateModel(It.Is<Model>(m => m == null)), Times.Never);
+        }
+
+        [Fact]
+        public void EditModel_NonExistingModel_ExpectInvalidOperationException()
+        {
+            Model model = new Model()
+            {
+                ModelId = 1,
+                Name = "Ceed",
+                ManufacturerId = 1,
+            };
+
+            repoMock.Setup(repo => repo.ReadModelById(It.Is<int>(z => z == model.ModelId))).Returns(() => null);
+
+
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                modelService.EditModel(model);
+            });
+
+            Assert.Equal("Update of non-existing model", ex.Message);
+            repoMock.Verify(repo => repo.UpdateModel(It.Is<Model>(s => s == model)), Times.Never);
+        }
+
+        #endregion
     }
 
 }

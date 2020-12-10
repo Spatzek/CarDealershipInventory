@@ -19,7 +19,9 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
 
         public Model AddModel(Model model)
         {
-            throw new NotImplementedException();
+            _ctx.Attach(model).State = EntityState.Added;
+            _ctx.SaveChanges();
+            return model;
         }
 
         public List<Model> ReadAllModels()
@@ -58,11 +60,12 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
             return model;
         }
 
-        public Model CreateModel(Model model)
+        public Model UpdateModel(Model model)
         {
-            _ctx.Attach(model).State = EntityState.Added;
+            var updatedModel = _ctx.Models.Update(model).Entity;
             _ctx.SaveChanges();
-            return model;
+
+            return updatedModel;
         }
     }
 }
