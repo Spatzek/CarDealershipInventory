@@ -43,8 +43,9 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // PUT api/<ModelsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<Model> Put(int id, [FromBody] Model model)
         {
+            return Ok(_modelService.EditModel(model));
         }
 
         // DELETE api/<ModelsController>/5

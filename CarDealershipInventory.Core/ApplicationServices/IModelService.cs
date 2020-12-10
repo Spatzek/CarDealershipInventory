@@ -11,5 +11,6 @@ namespace CarDealershipInventory.Core.ApplicationServices
         public Model GetModelById(int id);
         public Model DeleteModel(int id);
         public Model CreateModel(Model model);
+        public Model EditModel(Model model);
     }
 }
