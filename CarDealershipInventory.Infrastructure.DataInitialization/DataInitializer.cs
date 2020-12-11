@@ -3,6 +3,7 @@ using CarDealershipInventory.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -189,15 +190,15 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Kilometers = 155000,
                 ProductionYear = 2010,
                 LicensePlate = "AA11223",
-                DateOfPurchase = DateTime.Parse("1/1/2020"),
+                DateOfPurchase = DateTime.Parse("1/1/2020", new CultureInfo("da-DK")),
                 PurchasePrice = 19000,
                 CurrentPrice = 24000,
-                DateOfSale = DateTime.Parse("1/2/2020"),
+                DateOfSale = DateTime.Parse("1/2/2020", new CultureInfo("da-DK")),
                 SoldPrice = 23000,
                 VAT = 1000,
                 IsSold = true,
                 DaysInInventory = 30,
-                LastInspection = DateTime.Parse("10/10/2018")
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
             }).Entity;
 
             Car car2 = ctx.Cars.Add(new Car
@@ -208,15 +209,15 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Kilometers = 150000,
                 ProductionYear = 1999,
                 LicensePlate = "AA11222",
-                DateOfPurchase = DateTime.Parse("10/10/2020"),
+                DateOfPurchase = DateTime.Parse("10/10/2020", new CultureInfo("da-DK")),
                 PurchasePrice = 19000,
                 CurrentPrice = 29000,
-                DateOfSale = DateTime.Parse("10/11/2020"),
+                DateOfSale = DateTime.Parse("10/11/2020", new CultureInfo("da-DK")),
                 SoldPrice = 28500,
                 VAT = 2500,
                 IsSold = true,
                 DaysInInventory = 30,
-                LastInspection = DateTime.Parse("10/10/2018")
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
             }).Entity;
             ctx.SaveChanges();
 
@@ -228,15 +229,15 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Kilometers = 150000,
                 ProductionYear = 1999,
                 LicensePlate = "AB11222",
-                DateOfPurchase = DateTime.Parse("5/10/2020"),
+                DateOfPurchase = DateTime.Parse("5/10/2020", new CultureInfo("da-DK")),
                 PurchasePrice = 19000,
                 CurrentPrice = 29000,
-                DateOfSale = DateTime.Parse("10/11/2020"),
+                DateOfSale = DateTime.Parse("10/11/2020", new CultureInfo("da-DK")),
                 SoldPrice = 28500,
                 VAT = 2500,
                 IsSold = true,
                 DaysInInventory = 30,
-                LastInspection = DateTime.Parse("10/10/2018")
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
             }).Entity;
             ctx.SaveChanges();
 
@@ -248,15 +249,15 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Kilometers = 150000,
                 ProductionYear = 1999,
                 LicensePlate = "AC11222",
-                DateOfPurchase = DateTime.Parse("5/10/2020"),
+                DateOfPurchase = DateTime.Parse("5/10/2020", new CultureInfo("da-DK")),
                 PurchasePrice = 19000,
                 CurrentPrice = 29000,
-                DateOfSale = DateTime.Parse("10/11/2020"),
+                DateOfSale = DateTime.Parse("10/11/2020", new CultureInfo("da-DK")),
                 SoldPrice = 28500,
                 VAT = 2500,
                 IsSold = true,
                 DaysInInventory = 30,
-                LastInspection = DateTime.Parse("10/10/2018")
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
             }).Entity;
             ctx.SaveChanges();
 
@@ -268,15 +269,15 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Kilometers = 150000,
                 ProductionYear = 1999,
                 LicensePlate = "AD11222",
-                DateOfPurchase = DateTime.Parse("5/10/2020"),
+                DateOfPurchase = DateTime.Parse("5/10/2020", new CultureInfo("da-DK")),
                 PurchasePrice = 19000,
                 CurrentPrice = 29000,
-                DateOfSale = DateTime.Parse("10/11/2020"),
+                DateOfSale = DateTime.Parse("10/11/2020", new CultureInfo("da-DK")),
                 SoldPrice = 28500,
                 VAT = 2500,
                 IsSold = true,
                 DaysInInventory = 30,
-                LastInspection = DateTime.Parse("10/10/2018")
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
             }).Entity;
             ctx.SaveChanges();
 
@@ -288,15 +289,15 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
                 Kilometers = 150000,
                 ProductionYear = 1999,
                 LicensePlate = "AE11222",
-                DateOfPurchase = DateTime.Parse("5/10/2020"),
+                DateOfPurchase = DateTime.Parse("5/10/2020", new CultureInfo("da-DK")),
                 PurchasePrice = 19000,
                 CurrentPrice = 29000,
-                DateOfSale = DateTime.Parse("10/11/2020"),
+                DateOfSale = DateTime.Parse("10/11/2020", new CultureInfo("da-DK")),
                 SoldPrice = 28500,
                 VAT = 2500,
                 IsSold = true,
                 DaysInInventory = 30,
-                LastInspection = DateTime.Parse("10/10/2018")
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
             }).Entity;
             ctx.SaveChanges();
         }
