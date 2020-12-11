@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarDealershipInventory.Core.ApplicationServices;
 using CarDealershipInventory.Core.ApplicationServices.Impl;
+using CarDealershipInventory.Core.ApplicationServices.Validators;
+using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
 using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Infrastructure.Data;
 using CarDealershipInventory.Infrastructure.Data.Repositories;
@@ -58,6 +60,11 @@ namespace CarDealershipInventory.UI.RestAPI
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IModelService, ModelService>();
+            services.AddScoped<IModelValidator, ModelValidator>();
+            services.AddScoped<IManufacturerValidator, ManufacturerValidator>();
+            services.AddScoped<ICarValidator, CarValidator>();
+            services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
+            services.AddScoped<IManufacturerService, ManufacturerService>();
             services.AddTransient<IDataInitializer, DataInitializer>();
 
             services.AddControllers();

@@ -1,12 +1,14 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace CarDealershipInventory.Core.ApplicationServices.Validators
 {
-    public class CarValidator
+    public class CarValidator : ICarValidator
     {
         private ICarRepository _carRepository;
         private IModelRepository _modelRepository;
@@ -18,8 +20,24 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
 
         public void ValidateCar(Car car)
         {
+            if (car == null)
+            {
+                throw new ArgumentException("Car to validate is missing");
+            }
             ValidateCarModel(car.ModelId);
             ValidateNumberIsNonNegative(car.Key, "Key number");
+            ValidateTextIsNotNullOrEmpty(car.Location, "Location");
+            ValidateDateIsNotInFuture(car.LastInspection, "Last inspection date");
+            ValidateNumberIsNonNegative(car.Kilometers, "Kilometers");
+            ValidateProductionYear(car.ProductionYear);
+            ValidateTextIsNotNullOrEmpty(car.LicensePlate, "License plate");
+            ValidateDateIsNotNull(car.DateOfPurchase, "Date of purchase");
+            ValidateDateIsNotInFuture(car.DateOfPurchase, "Date of purchase");
+            ValidateNumberIsNonNegative(car.PurchasePrice, "Purchase price");
+            ValidateNumberIsNonNegative(car.CurrentPrice, "Current price");
+            ValidateDateOfSaleIsNotBeforeDateOfPurchase(car.DateOfPurchase, car.DateOfSale);
+            ValidateNumberIsNonNegative(car.SoldPrice, "Sold price");
+            ValidateNumberIsNonNegative(car.VAT, "Value added tax");
         }
 
         public void ValidateCarModel(int modelId)
@@ -30,11 +48,53 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             }
         }
 
-        public void ValidateNumberIsNonNegative(int number, string property)
+        public void ValidateNumberIsNonNegative(double number, string property)
         {
             if (number < 0)
             {
                 throw new ArgumentException($"{property} can not be negative");
+            }
+        }
+
+        public void ValidateTextIsNotNullOrEmpty(string text, string property)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"{property} information is missing or empty");
+            }
+        }
+
+        public void ValidateDateIsNotNull(DateTime? date, string property)
+        {
+            if(date == null)
+            {
+                throw new ArgumentException($"{property} must be defined");
+            }
+        }
+
+        public void ValidateDateIsNotInFuture(DateTime? date, string property)
+        {
+            if (date.HasValue && date.Value.Date > DateTime.Today.Date)
+            {
+                throw new ArgumentException($"{property} can not be in the future");
+            }
+        }
+
+        public void ValidateProductionYear(int year)
+        {
+            int firstCar = 1880; // oldest running automobile is from 1884...
+
+            if (year < firstCar || year > DateTime.Now.Year)
+            {
+                throw new ArgumentException("Production year must in range between 1880 and this year");
+            }
+        }
+
+        public void ValidateDateOfSaleIsNotBeforeDateOfPurchase(DateTime? purchaseDate, DateTime? saleDate)
+        {
+            if (purchaseDate.HasValue && saleDate.HasValue && purchaseDate.Value.Date > saleDate.Value.Date)
+            {
+                throw new ArgumentException("Date of sale can not precede date of purchase");
             }
         }
 

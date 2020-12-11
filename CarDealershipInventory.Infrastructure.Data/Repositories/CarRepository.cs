@@ -17,6 +17,13 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
             _ctx = ctx;
         }
 
+        public Car CreateCar(Car car)
+        {
+            var entry = _ctx.Add(car);
+            _ctx.SaveChanges();
+            return entry.Entity;
+        }
+
         public List<Car> ReadAllCars()
         {
             return _ctx.Cars

@@ -36,14 +36,16 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
 
         // POST api/<ModelsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Model> Post([FromBody] Model model)
         {
+            return Ok(_modelService.CreateModel(model));
         }
 
         // PUT api/<ModelsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<Model> Put(int id, [FromBody] Model model)
         {
+            return Ok(_modelService.EditModel(model));
         }
 
         // DELETE api/<ModelsController>/5

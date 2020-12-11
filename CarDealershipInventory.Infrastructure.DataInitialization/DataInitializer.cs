@@ -12,7 +12,14 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
         {
             ctx.Database.EnsureDeleted(); //ONLY in development //dont use when impl sql server
             ctx.Database.EnsureCreated();
+            
             // Fabrikanter
+            Manufacturer placeholder = ctx.Manufacturers.Add(new Manufacturer
+            {
+                Name = "Default"
+            }).Entity;
+            ctx.SaveChanges();
+
             Manufacturer kia = ctx.Manufacturers.Add(new Manufacturer
             {
                 Name = "Kia"
@@ -49,53 +56,104 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             }).Entity;
             ctx.SaveChanges();
 
+            #region Placeholder Models
+            Model placeholder1 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 1
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder2 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 2
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder3 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 3
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder4 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 4
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder5 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 5
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder6 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 6
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder7 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 7
+            }).Entity;
+            ctx.SaveChanges();
+            #endregion
+
             // modeller
             Model picanto = ctx.Models.Add(new Model
             {
                 Name = "Picanto",
-                Manufacturer = kia
+                ManufacturerId = 2
             }).Entity;
             ctx.SaveChanges();
 
             Model ceed = ctx.Models.Add(new Model
             {
                 Name = "Ceed",
-                Manufacturer = kia
+                ManufacturerId = 2
             }).Entity;
             ctx.SaveChanges();
 
             Model fiesta = ctx.Models.Add(new Model
             {
                 Name = "Fiesta",
-                Manufacturer = ford
+                ManufacturerId = 3
             }).Entity;
             ctx.SaveChanges();
 
             Model hundredeogsyv = ctx.Models.Add(new Model
             {
                 Name = "107",
-                Manufacturer = peugeout
+                ManufacturerId = 4
             }).Entity;
             ctx.SaveChanges();
 
             Model corolla = ctx.Models.Add(new Model
             {
                 Name = "Corolla",
-                Manufacturer = kia
+                ManufacturerId = 2
             }).Entity;
             ctx.SaveChanges();
 
             Model golf = ctx.Models.Add(new Model
             {
                 Name = "Golf",
-                Manufacturer = kia
+                ManufacturerId = 2
             }).Entity;
             ctx.SaveChanges();
 
             Model clio = ctx.Models.Add(new Model
             {
                 Name = "Clio",
-                Manufacturer = kia
+                ManufacturerId = 2
             }).Entity;
             ctx.SaveChanges();
 
@@ -104,7 +162,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car1 = ctx.Cars.Add(new Car
             {
                 Key = 1,
-                Model = picanto,
+                ModelId = 8,
                 Location = "Hal 2",
                 Kilometers = 155000,
                 ProductionYear = 2010,
@@ -123,7 +181,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car2 = ctx.Cars.Add(new Car
             {
                 Key = 2,
-                Model = ceed,
+                ModelId = 9,
                 Location = "Hal 1",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -143,7 +201,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car3 = ctx.Cars.Add(new Car
             {
                 Key = 3,
-                Model = hundredeogsyv,
+                ModelId = 11,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -163,7 +221,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car4 = ctx.Cars.Add(new Car
             {
                 Key = 4,
-                Model = corolla,
+                ModelId = 12,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -183,7 +241,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car5 = ctx.Cars.Add(new Car
             {
                 Key = 5,
-                Model = golf,
+                ModelId = 13,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -203,7 +261,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car6 = ctx.Cars.Add(new Car
             {
                 Key = 6,
-                Model = clio,
+                ModelId = 14,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,

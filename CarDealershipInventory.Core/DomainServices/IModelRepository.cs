@@ -10,5 +10,7 @@ namespace CarDealershipInventory.Core.DomainServices
         public List<Model> ReadAllModels();
         public Model ReadModelById(int id);
         public Model RemoveModel(int id);
+        public Model AddModel(Model model);
+        public Model UpdateModel(Model model);
     }
 }

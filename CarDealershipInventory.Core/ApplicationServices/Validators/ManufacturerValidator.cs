@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace CarDealershipInventory.Core.ApplicationServices.Validators
 {
-    public class ManufacturerValidator
+    public class ManufacturerValidator : IManufacturerValidator
     {
         private IManufacturerRepository _manufacturerRepository;
 
@@ -17,6 +18,10 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
 
         public void ValidateManufacturer(Manufacturer manufacturer)
         {
+            if (manufacturer == null)
+            {
+                throw new ArgumentException("Manufacturer to validate is missing");
+            }
             if (string.IsNullOrEmpty(manufacturer.Name))
             {
                 throw new ArgumentException("Manufacturer must have a name");

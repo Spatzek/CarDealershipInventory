@@ -1,5 +1,7 @@
 ﻿using CarDealershipInventory.Core.ApplicationServices;
 using CarDealershipInventory.Core.ApplicationServices.Impl;
+using CarDealershipInventory.Core.ApplicationServices.Validators;
+using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
 using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using Moq;
@@ -14,13 +16,19 @@ namespace CarDealershipInventory.Test
     public class ModelServiceTest
     {
         private Mock<IModelRepository> repoMock;
+        //private IModelValidator modelValidator;
+        //private Mock<IManufacturerRepository> manuRepoMock;
         private List<Model> models = null;
+        //private List<Manufacturer> manufacturers = null;
 
         public ModelServiceTest()
         {
             repoMock = new Mock<IModelRepository>();
+            //manuRepoMock = new Mock<IManufacturerRepository>();
+            //modelValidator = new ModelValidator(repoMock.Object, manuRepoMock.Object);
             repoMock.Setup(repo => repo.ReadAllModels()).Returns(() => models);
             repoMock.Setup(repo => repo.ReadModelById(It.IsAny<int>())).Returns((int id) => models.FirstOrDefault(m => m.ModelId == id));
+            //manuRepoMock.Setup(repo => repo.ReadManufacturerById(It.IsAny<int>())).Returns((int id) => manufacturers.FirstOrDefault(m => m.ManufacturerId == id));
         }
 
         [Fact]
@@ -30,7 +38,7 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                modelService = new ModelService(null);
+                modelService = new ModelService(null, null);
 
             });
             Assert.Equal("Model repository is missing", ex.Message);
@@ -50,7 +58,7 @@ namespace CarDealershipInventory.Test
                 models.Add(new Model { ModelId = i });
             }
 
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
             int result = modelService.GetAllModels().Count;
             Assert.Equal(result, models.Count);
 
@@ -60,7 +68,7 @@ namespace CarDealershipInventory.Test
         [Fact]
         public void GetAllModels_ListIsNull_ExpectNullReferenceException()
         {
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
             var ex = Assert.Throws<NullReferenceException>(() =>
             {
@@ -84,7 +92,7 @@ namespace CarDealershipInventory.Test
 
             models.Add(new Model { ModelId = modelId, ManufacturerId = manufacturerId });
 
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
             Model model = modelService.GetModelById(modelId);
 
@@ -103,7 +111,7 @@ namespace CarDealershipInventory.Test
             models.Add(new Model { ModelId = 2, ManufacturerId = 2 });
             models.Add(new Model { ModelId = 3, ManufacturerId = 3 });
 
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
             Model model = null;
             int id = 4;
@@ -130,7 +138,7 @@ namespace CarDealershipInventory.Test
             models.Add(new Model { ModelId = 2, ManufacturerId = 2 });
             models.Add(new Model { ModelId = 3, ManufacturerId = 3 });
 
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
             Model model = null;
 
@@ -153,11 +161,11 @@ namespace CarDealershipInventory.Test
             models = new List<Model>();
 
             Model model = new Model { ModelId = 1 };
-            
+
             models.Add(model);
 
 
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
             modelService.DeleteModel(model.ModelId);
 
@@ -168,7 +176,7 @@ namespace CarDealershipInventory.Test
         [Fact]
         public void DeleteModel_ModelIdIsZeroOrNegative_ExpectArgumentException()
         {
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
@@ -187,9 +195,9 @@ namespace CarDealershipInventory.Test
 
             Model model = new Model { ModelId = 1 };
 
-            IModelService modelService = new ModelService(repoMock.Object);
+            IModelService modelService = new ModelService(repoMock.Object, null);
 
-            //repoMock.Setup(repo => repo.GetModelById(It.Is<int>(m => m == model.ModelId))).Returns(() => null);
+            repoMock.Setup(repo => repo.ReadModelById(It.Is<int>(m => m == model.ModelId))).Returns(() => null);
 
             var ex = Assert.Throws<InvalidOperationException>(() =>
             {
@@ -201,6 +209,140 @@ namespace CarDealershipInventory.Test
             Assert.Equal("Attempted to remove non-existing model", ex.Message);
             repoMock.Verify(repo => repo.RemoveModel(It.Is<int>(m => m == model.ModelId)), Times.Never);
         }
+        #endregion
+
+        #region CreateModel
+
+        [Theory]
+        [InlineData(1, "Ceed", 1)]
+        [InlineData(2, "Picanto", 2)]
+        public void AddModel_ValidNonExistingModel(int id, string name, int manufacturerId)
+        {
+            Model model = new Model()
+            {
+                ModelId = id,
+                Name = name,
+                ManufacturerId = manufacturerId,
+            };
+
+            repoMock.Setup(repo => repo.ReadModelById(It.Is<int>(m => m == model.ModelId))).Returns(() => null);
+
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+
+            Model createdModel = modelService.CreateModel(model);
+
+
+            repoMock.Verify(repo => repo.AddModel(It.Is<Model>(m => m == model)), Times.Once);
+        }
+
+        [Fact]
+        public void AddModel_ModelIsNull_ExpectArgumentException()
+        {
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                modelService.CreateModel(null);
+            });
+
+            Assert.Equal("Model is missing", ex.Message);
+            repoMock.Verify(repo => repo.AddModel(It.Is<Model>(m => m == null)), Times.Never);
+        }
+
+        [Fact]
+        public void AddModel_ModelExists_ExpectInvalidOperationException()
+        {
+            models = new List<Model>();
+
+            Model model = new Model()
+            {
+                ModelId = 1,
+                Name = "Ceed",
+                ManufacturerId = 1,
+            };
+
+            models.Add(model);
+
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                modelService.CreateModel(model);
+            });
+
+            Assert.Equal("Model already exist", ex.Message);
+            repoMock.Verify(repo => repo.AddModel(It.Is<Model>(s => s == model)), Times.Never);
+
+
+            
+        }
+        #endregion
+
+        #region EditModel
+        [Theory]
+        [InlineData(1, "Ceed", 1)]
+        [InlineData(2, "Picanto", 2)]
+        public void EditModel_ValidExistingModel(int id, string name, int manufacturerId)
+        {
+            Model model = new Model()
+            {
+                ModelId = id,
+                Name = name,
+                ManufacturerId = manufacturerId,
+            };
+
+            repoMock.Setup(repo => repo.ReadModelById(It.Is<int>(m => m == model.ModelId))).Returns(() => model);
+
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+
+            modelService.EditModel(model);
+
+
+            repoMock.Verify(repo => repo.UpdateModel(It.Is<Model>(m => m == model)), Times.Once);
+        }
+
+        [Fact]
+        public void EditModel_ModelIsNull_ExpectArgumentException()
+        {
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                modelService.EditModel(null);
+            });
+
+            Assert.Equal("Model is missing", ex.Message);
+            repoMock.Verify(repo => repo.UpdateModel(It.Is<Model>(m => m == null)), Times.Never);
+        }
+
+        [Fact]
+        public void EditModel_NonExistingModel_ExpectInvalidOperationException()
+        {
+            Model model = new Model()
+            {
+                ModelId = 1,
+                Name = "Ceed",
+                ManufacturerId = 1,
+            };
+
+            repoMock.Setup(repo => repo.ReadModelById(It.Is<int>(z => z == model.ModelId))).Returns(() => null);
+
+
+            ModelService modelService = new ModelService(repoMock.Object, null);
+
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                modelService.EditModel(model);
+            });
+
+            Assert.Equal("Update of non-existing model", ex.Message);
+            repoMock.Verify(repo => repo.UpdateModel(It.Is<Model>(s => s == model)), Times.Never);
+        }
+
         #endregion
     }
 

@@ -22,8 +22,11 @@ namespace CarDealershipInventory.Test
             repoMock = new Mock<ICarRepository>();
             repoMock.Setup(repo => repo.ReadAllCars()).Returns(() => cars);
             repoMock.Setup(repo => repo.ReadCarById(It.IsAny<int>())).Returns((int id) => cars.FirstOrDefault(c => c.CarId == id));
+            repoMock.Setup(repo => repo.CreateCar(It.IsAny<Car>()))
+                .Callback<Car>((car) => cars.Add(car));
         }
 
+        #region Constructor
         [Fact]
         public void CreateCarService_RepositoryIsNull_ExpectArgumentException()
         {
@@ -31,14 +34,15 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
               {
-                  carService = new CarService(null);
+                  carService = new CarService(null, null);
 
               });
             Assert.Equal("Car repository is missing", ex.Message);
             Assert.Null(carService);
         }
+        #endregion
 
-
+        #region GetAll
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
@@ -51,7 +55,7 @@ namespace CarDealershipInventory.Test
                 cars.Add(new Car { CarId = i });
             }
 
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
             int result = carService.GetAllCars().Count;
             Assert.Equal(result, cars.Count);
             repoMock.Verify(repo => repo.ReadAllCars(), Times.Once);
@@ -60,7 +64,7 @@ namespace CarDealershipInventory.Test
         [Fact]
         public void GetAllCars_ListIsNull_ExpectNullReferenceException()
         {
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
 
             var ex = Assert.Throws<NullReferenceException>(() =>
             {
@@ -72,7 +76,9 @@ namespace CarDealershipInventory.Test
 
             repoMock.Verify(repo => repo.ReadAllCars(), Times.Once);
         }
+        #endregion
 
+        #region GetById
         [Theory]
         [InlineData(1, 1)]
         [InlineData(2, 5)]
@@ -85,7 +91,7 @@ namespace CarDealershipInventory.Test
             cars.Add(new Car { CarId = carId, ModelId = modelId });
             cars.Add(new Car { CarId = carId, ModelId = modelId });
 
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
 
             Car car = carService.GetCarById(carId);
 
@@ -104,7 +110,7 @@ namespace CarDealershipInventory.Test
             cars.Add(new Car { CarId = 2, ModelId = 2 });
             cars.Add(new Car { CarId = 3, ModelId = 3 });
 
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
 
             Car car = null;
             int carId = 4;
@@ -119,6 +125,8 @@ namespace CarDealershipInventory.Test
 
             repoMock.Verify(repo => repo.ReadCarById(carId), Times.Once);
         }
+        #endregion
+
         #region DeleteModel
         [Fact]
         public void DeleteCar_ExistingCar()
@@ -172,6 +180,33 @@ namespace CarDealershipInventory.Test
             repoMock.Verify(repo => repo.RemoveCar(It.Is<int>(m => m == car.CarId)), Times.Never);
         }
 
+        #endregion
+
+        #region Create
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData(1, 5)]
+        public void CreateCar(int carId, int modelId)
+        {
+            cars = new List<Car>();
+
+            ICarService carService = new CarService(repoMock.Object, null);
+
+
+            Car car = new Car
+            {
+                CarId = carId,
+                ModelId = modelId
+            };
+
+            Car createdCar = carService.CreateCar(car);
+
+            Assert.Equal(car.CarId, cars[0].CarId);
+            Assert.Equal(car.ModelId, cars[0].ModelId);
+            Assert.Equal(1, cars.Count);
+
+            repoMock.Verify(repo => repo.CreateCar(It.IsAny<Car>()), Times.Once);            
+        }
+        #endregion
     }
 }
-#endregion

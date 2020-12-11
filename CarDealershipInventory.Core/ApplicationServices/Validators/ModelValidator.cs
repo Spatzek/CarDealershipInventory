@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace CarDealershipInventory.Core.ApplicationServices.Validators
 {
-    public class ModelValidator
+    public class ModelValidator : IModelValidator
     {
         private IModelRepository _modelRepository;
         private IManufacturerRepository _manufacturerRepository;
@@ -18,10 +19,15 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         }
         public void ValidateModel(Model model)
         {
+            if (model == null)
+            {
+                throw new ArgumentException("Model to validate is missing");
+            }
             if (string.IsNullOrEmpty(model.Name))
             {
                 throw new ArgumentException("Model must have a name");
             }
+            //if (model.ManufacturerId.HasValue && _manufacturerRepository.ReadManufacturerById(model.ManufacturerId.Value) == null)
             if (_manufacturerRepository.ReadManufacturerById(model.ManufacturerId) == null)
             {
                 throw new ArgumentException("Manufacturer does not exist in the database");
