@@ -15,7 +15,7 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         public ManufacturerRepository(CarDealershipInventoryContext ctx)
         {
             _ctx = ctx;
-        }
+        }        
 
         public List<Manufacturer> ReadAllManufacturers()
         {
@@ -32,11 +32,23 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
                 .FirstOrDefault(m => m.ManufacturerId == id);
         }
 
+        public Manufacturer AddManufacturer(Manufacturer manufacturer)
+        {
+            var entry = _ctx.Add(manufacturer);
+            _ctx.SaveChanges();
+            return entry.Entity;
+        }
+
+        public Manufacturer UpdateManufacturer(Manufacturer manufacturer)
+        {
+            throw new NotImplementedException();
+        }
+
         public Manufacturer RemoveManufacturer(int id)
         {
             var entry = _ctx.Remove(new Manufacturer { ManufacturerId = id });
             _ctx.SaveChanges();
             return entry.Entity;
-        }
+        }        
     }
 }

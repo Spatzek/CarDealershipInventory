@@ -22,10 +22,13 @@ namespace CarDealershipInventory.Test
             repoMock.Setup(repo => repo.ReadAllManufacturers()).Returns(() => manufacturers);
             repoMock.Setup(repo => repo.ReadManufacturerById(It.IsAny<int>()))
                 .Returns((int id) => manufacturers.FirstOrDefault(m => m.ManufacturerId == id));
+            repoMock.Setup(repo => repo.AddManufacturer(It.IsAny<Manufacturer>()))
+                .Callback<Manufacturer>((manufacturer) => manufacturers.Add(manufacturer));
             repoMock.Setup(repo => repo.RemoveManufacturer(It.IsAny<int>()))
                 .Callback<int>((id) => manufacturers.RemoveAll(m => m.ManufacturerId == id));
         }
 
+        #region Constructor
         [Fact]
         public void CreateManufacturerService_RepositoryIsNull_ExpectArgumentException()
         {
@@ -33,13 +36,15 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                service = new ManufacturerService(null);
+                service = new ManufacturerService(null, null);
             });
 
             Assert.Equal("Manufacturer repository is missing", ex.Message);
             Assert.Null(service);
         }
+        #endregion
 
+        #region GetAll
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
@@ -52,7 +57,7 @@ namespace CarDealershipInventory.Test
                 manufacturers.Add(new Manufacturer { ManufacturerId = i });
             }
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
             int result = service.GetAllManufacturers().Count;
             Assert.Equal(result, manufacturers.Count);
 
@@ -64,7 +69,7 @@ namespace CarDealershipInventory.Test
         {
             manufacturers = null;
             List<Manufacturer> listOfManufacturers = null;
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
 
             var ex = Assert.Throws<NullReferenceException>(() =>
             {
@@ -75,7 +80,9 @@ namespace CarDealershipInventory.Test
 
             repoMock.Verify(repo => repo.ReadAllManufacturers(), Times.Once);
         }
+        #endregion
 
+        #region GetById
         [Theory]
         [InlineData(1, "Toyota")]
         [InlineData(2, "Peugeot")]
@@ -89,7 +96,7 @@ namespace CarDealershipInventory.Test
                 new Manufacturer { ManufacturerId = 3, Name = "Ford"},
             };
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
             Manufacturer manufacturer = service.GetManufacturerById(id);
 
             Assert.Equal(manufacturer.ManufacturerId, id);
@@ -107,7 +114,7 @@ namespace CarDealershipInventory.Test
                 new Manufacturer { ManufacturerId = 1, Name = "Toyota"}                
             };
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
             Manufacturer manufacturer = null;
 
             var ex = Assert.Throws<ArgumentException>(() =>
@@ -133,7 +140,7 @@ namespace CarDealershipInventory.Test
                 new Manufacturer { ManufacturerId = 4, Name = "Ford"},
             };
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
             Manufacturer manufacturer = null;
 
             var ex = Assert.Throws<NullReferenceException>(() =>
@@ -146,7 +153,9 @@ namespace CarDealershipInventory.Test
 
             repoMock.Verify(repo => repo.ReadManufacturerById(It.IsAny<int>()), Times.Once);
         }
+        #endregion
 
+        #region Delete
         [Theory]
         [InlineData(1)]
         [InlineData(2)]
@@ -163,7 +172,7 @@ namespace CarDealershipInventory.Test
             Assert.Equal(3, manufacturers.Count);
             Assert.True(manufacturers.Exists(m => m.ManufacturerId == id));
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
 
             Manufacturer manufacturer = service.DeleteManufacturer(id);
 
@@ -187,7 +196,7 @@ namespace CarDealershipInventory.Test
 
             Assert.Equal(3, manufacturers.Count);
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
             Manufacturer manufacturer = null;
 
             var ex = Assert.Throws<ArgumentException>(() =>
@@ -216,7 +225,7 @@ namespace CarDealershipInventory.Test
 
             Assert.Equal(3, manufacturers.Count);
 
-            IManufacturerService service = new ManufacturerService(repoMock.Object);
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
             Manufacturer manufacturer = null;
 
             var ex = Assert.Throws<InvalidOperationException>(() =>
@@ -230,7 +239,84 @@ namespace CarDealershipInventory.Test
 
             repoMock.Verify(repo => repo.RemoveManufacturer(It.IsAny<int>()), Times.Never);
         }
-        
+        #endregion
+
+        #region Create
+        [Theory]
+        [InlineData(1, "Ford")]
+        [InlineData(3, "Renault")]
+        public void CreateManufacturer(int manuId, string name)
+        {
+            manufacturers = new List<Manufacturer>();
+
+            Manufacturer manufacturer = new Manufacturer
+            {
+                ManufacturerId = manuId,
+                Name = name
+            };
+
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
+
+            service.CreateManufacturer(manufacturer);
+
+            Assert.Equal(manufacturer.ManufacturerId, manufacturers[0].ManufacturerId);
+            Assert.Equal(manufacturer.Name, manufacturers[0].Name);
+            Assert.True(manufacturers.Count == 1);
+
+            repoMock.Verify(repo => repo.AddManufacturer(It.IsAny<Manufacturer>()), Times.Once);
+        }
+
+        [Fact]
+        public void CreateManufacturer_ManufacturerIdIsNegative_ExpectArgumentException()
+        {
+            manufacturers = new List<Manufacturer>();
+
+            Manufacturer manufacturer = new Manufacturer
+            {
+                ManufacturerId = -1
+            };
+
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                service.CreateManufacturer(manufacturer);
+            });
+            Assert.Equal("Manufacturer ID for new car can not be negative", ex.Message);
+            Assert.True(manufacturers.Count == 0);
+
+            repoMock.Verify(repo => repo.AddManufacturer(It.IsAny<Manufacturer>()), Times.Never);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void CreateManufacturer_ManufacturerWithIdAlreadyExists_ExpectInvalidOperationException(int manuId)
+        {
+            manufacturers = new List<Manufacturer>
+            {
+                new Manufacturer { ManufacturerId = 1},
+                new Manufacturer { ManufacturerId = 2},
+                new Manufacturer { ManufacturerId = 3}
+            };
+
+            Manufacturer manufacturer = new Manufacturer { ManufacturerId = manuId };
+
+            IManufacturerService service = new ManufacturerService(repoMock.Object, null);
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                service.CreateManufacturer(manufacturer);
+            });
+            Assert.Equal("Manufacturer ID can not match car which already exists", ex.Message);
+            Assert.True(manufacturers.Count == 3);
+            Assert.True(manufacturers.Where(m => m.ManufacturerId == manuId).ToList().Count == 1);
+
+            repoMock.Verify(repo => repo.AddManufacturer(It.IsAny<Manufacturer>()), Times.Never);
+        }
+        #endregion
+
 
 
     }

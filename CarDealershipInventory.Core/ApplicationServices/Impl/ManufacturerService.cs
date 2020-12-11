@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.DomainServices;
+﻿using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
+using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Core.Entity;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,16 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
     public class ManufacturerService : IManufacturerService
     {
         private IManufacturerRepository _manuRepository;
+        private IManufacturerValidator _validator;
 
-        public ManufacturerService(IManufacturerRepository manuRepository)
+        public ManufacturerService(IManufacturerRepository manuRepository, IManufacturerValidator validator)
         {
             if (manuRepository == null)
             {
                 throw new ArgumentException("Manufacturer repository is missing");
             }
             _manuRepository = manuRepository;
+            _validator = validator;
         }
 
         public List<Manufacturer> GetAllManufacturers()
@@ -44,6 +47,28 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             return manufacturer;
         }
 
+        public Manufacturer CreateManufacturer(Manufacturer manufacturer)
+        {
+            if (manufacturer.ManufacturerId < 0)
+            {
+                throw new ArgumentException("Manufacturer ID for new car can not be negative");
+            }
+            if (_manuRepository.ReadManufacturerById(manufacturer.ManufacturerId) != null)
+            {
+                throw new InvalidOperationException("Manufacturer ID can not match car which already exists");
+            }
+            if (_validator != null)
+            {
+                _validator.ValidateManufacturer(manufacturer);
+            }
+            return _manuRepository.AddManufacturer(manufacturer);
+        }
+
+        public Manufacturer EditManufacturer(Manufacturer manufacturer)
+        {
+            throw new NotImplementedException();
+        }
+
         public Manufacturer DeleteManufacturer(int id)
         {
             if(id <= 0 )
@@ -56,6 +81,6 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             }
             Manufacturer manufacturer = _manuRepository.RemoveManufacturer(id);
             return manufacturer;
-        }
+        }        
     }
 }
