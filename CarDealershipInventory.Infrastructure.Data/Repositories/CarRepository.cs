@@ -38,18 +38,18 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         {
             Car car = ReadCarById(id);
 
-            //model.Manufacturer = null;
+            car = null;
 
-            //List<Car> cars = _ctx.Cars.Where(m => m.ModelId == id).ToList();
-            //foreach (Car car in cars)
-            //{
-            //    car.Model = null;
-            //    car.ModelId = 0;
-            //}
+            List<Car> cars = _ctx.Cars.Where(m => m.CarId == id).ToList();
+            foreach (Car _car in cars)
+            {
+                car = null;
+                _car.CarId = 0;
+            }
 
 
-            //_ctx.Models.Remove(model);
-            //_ctx.SaveChanges();
+            _ctx.Cars.Remove(car);
+            _ctx.SaveChanges();
 
             return car;
         }

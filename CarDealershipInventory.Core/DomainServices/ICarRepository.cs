@@ -9,7 +9,6 @@ namespace CarDealershipInventory.Core.DomainServices
     public interface ICarRepository
     {
         public List<Car> ReadAllCars();
-
         public Car ReadCarById(int id);
         public Car RemoveCar(int id);
     }
