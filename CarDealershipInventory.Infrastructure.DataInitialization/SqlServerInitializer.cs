@@ -9,13 +9,13 @@ using System.Text;
 
 namespace CarDealershipInventory.Infrastructure.DataInitialization
 {
-    public class DataInitializer : IDataInitializer
+    public class SqlServerInitializer : IDataInitializer
     {
         public void Initialize(CarDealershipInventoryContext ctx)
         {
             ctx.Database.EnsureCreated();
-            
-            if(ctx.Cars.Any())
+
+            if (ctx.Cars.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Cars");
                 ctx.Database.EnsureCreated();
@@ -302,5 +302,4 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             ctx.SaveChanges();
         }
     }
-    
 }

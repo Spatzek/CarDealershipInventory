@@ -35,7 +35,7 @@ namespace CarDealershipInventory.UI.RestAPI
         public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
                 options.AddDefaultPolicy(
@@ -57,6 +57,7 @@ namespace CarDealershipInventory.UI.RestAPI
                 {
                     opt.UseLoggerFactory(loggerFactory)
                     .UseSqlite("Data Source=cardealershipinventory.db");
+                    services.AddTransient<IDataInitializer, SqlLiteInitializer>();
                 }, ServiceLifetime.Transient
                 );
             }
@@ -66,6 +67,7 @@ namespace CarDealershipInventory.UI.RestAPI
                 opt =>
                 {
                     opt.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));
+                    services.AddTransient<IDataInitializer, SqlServerInitializer>();
                 }
                 );
             }
@@ -79,7 +81,8 @@ namespace CarDealershipInventory.UI.RestAPI
             services.AddScoped<ICarValidator, CarValidator>();
             services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
             services.AddScoped<IManufacturerService, ManufacturerService>();
-            services.AddTransient<IDataInitializer, DataInitializer>();
+            services.AddTransient<IDataInitializer, SqlServerInitializer>();
+
 
             services.AddControllers();
 
