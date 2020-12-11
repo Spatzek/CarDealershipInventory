@@ -56,12 +56,56 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             }).Entity;
             ctx.SaveChanges();
 
+            #region Placeholder Models
             Model placeholder1 = ctx.Models.Add(new Model
             {
                 Name = "Default",
                 ManufacturerId = 1
             }).Entity;
             ctx.SaveChanges();
+
+            Model placeholder2 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 2
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder3 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 3
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder4 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 4
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder5 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 5
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder6 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 6
+            }).Entity;
+            ctx.SaveChanges();
+
+            Model placeholder7 = ctx.Models.Add(new Model
+            {
+                Name = "Default",
+                ManufacturerId = 7
+            }).Entity;
+            ctx.SaveChanges();
+            #endregion
 
             // modeller
             Model picanto = ctx.Models.Add(new Model
@@ -118,7 +162,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car1 = ctx.Cars.Add(new Car
             {
                 Key = 1,
-                ModelId = 2,
+                ModelId = 8,
                 Location = "Hal 2",
                 Kilometers = 155000,
                 ProductionYear = 2010,
@@ -137,7 +181,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car2 = ctx.Cars.Add(new Car
             {
                 Key = 2,
-                ModelId = 3,
+                ModelId = 9,
                 Location = "Hal 1",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -157,7 +201,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car3 = ctx.Cars.Add(new Car
             {
                 Key = 3,
-                ModelId = 5,
+                ModelId = 11,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -177,7 +221,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car4 = ctx.Cars.Add(new Car
             {
                 Key = 4,
-                ModelId = 6,
+                ModelId = 12,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -197,7 +241,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car5 = ctx.Cars.Add(new Car
             {
                 Key = 5,
-                ModelId = 7,
+                ModelId = 13,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
@@ -217,7 +261,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             Car car6 = ctx.Cars.Add(new Car
             {
                 Key = 6,
-                ModelId = 8,
+                ModelId = 14,
                 Location = "Hal 3",
                 Kilometers = 150000,
                 ProductionYear = 1999,
