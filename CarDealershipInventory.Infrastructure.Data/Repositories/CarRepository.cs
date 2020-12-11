@@ -41,5 +41,24 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
                 .ThenInclude(m => m.Manufacturer)
                 .FirstOrDefault(c => c.CarId == id);
         }
+        public Car RemoveCar(int id)
+        {
+            Car car = ReadCarById(id);
+
+            car = null;
+
+            List<Car> cars = _ctx.Cars.Where(m => m.CarId == id).ToList();
+            foreach (Car _car in cars)
+            {
+                car = null;
+                _car.CarId = 0;
+            }
+
+
+            _ctx.Cars.Remove(car);
+            _ctx.SaveChanges();
+
+            return car;
+        }
     }
 }

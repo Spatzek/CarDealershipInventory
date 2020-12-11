@@ -31,7 +31,18 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             }
             return _carRepository.CreateCar(car);
         }
-
+        public Car DeleteCar(int id)
+        {
+            if (id < 1)
+            {
+                throw new ArgumentException("CarId cannot be less than 1");
+            }
+            else if (_carRepository.ReadCarById(id) == null)
+            {
+                throw new InvalidOperationException("Attempted to remove non-existing car");
+            }
+            return _carRepository.RemoveCar(id);
+        }
         public List<Car> GetAllCars()
         {
             List<Car> carList = _carRepository.ReadAllCars();
