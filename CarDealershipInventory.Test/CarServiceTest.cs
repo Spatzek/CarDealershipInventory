@@ -138,7 +138,7 @@ namespace CarDealershipInventory.Test
             cars.Add(car);
 
 
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
 
             carService.DeleteCar(car.CarId);
 
@@ -148,7 +148,7 @@ namespace CarDealershipInventory.Test
         [Fact]
         public void DeleteCar_CarIdIsZeroOrNegative_ExpectArgumentException()
         {
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
@@ -167,7 +167,7 @@ namespace CarDealershipInventory.Test
 
             Car car = new Car { CarId = 1 };
 
-            ICarService carService = new CarService(repoMock.Object);
+            ICarService carService = new CarService(repoMock.Object, null);
 
             var ex = Assert.Throws<InvalidOperationException>(() =>
             {
