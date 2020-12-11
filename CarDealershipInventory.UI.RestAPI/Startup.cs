@@ -25,15 +25,17 @@ namespace CarDealershipInventory.UI.RestAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
         {
             services.AddCors(options =>
                 options.AddDefaultPolicy(
@@ -48,13 +50,25 @@ namespace CarDealershipInventory.UI.RestAPI
                 builder.AddConsole();
             });
 
-            services.AddDbContext<CarDealershipInventoryContext>(
+            if(Environment.IsDevelopment())
+            {
+                services.AddDbContext<CarDealershipInventoryContext>(
                 opt =>
                 {
                     opt.UseLoggerFactory(loggerFactory)
                     .UseSqlite("Data Source=cardealershipinventory.db");
                 }, ServiceLifetime.Transient
                 );
+            }
+            else
+            {
+                services.AddDbContext<CarDealershipInventoryContext>(
+                opt =>
+                {
+                    opt.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));
+                }
+                );
+            }
 
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<ICarService, CarService>();
@@ -79,6 +93,16 @@ namespace CarDealershipInventory.UI.RestAPI
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var ctx = scope.ServiceProvider.GetService<CarDealershipInventoryContext>();
+                    var db = scope.ServiceProvider.GetService<IDataInitializer>();
+                    db.Initialize(ctx);
+                }
+            }
+            else
             {
                 app.UseDeveloperExceptionPage();
                 using (var scope = app.ApplicationServices.CreateScope())

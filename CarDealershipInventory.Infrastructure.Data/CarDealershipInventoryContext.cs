@@ -14,6 +14,7 @@ namespace CarDealershipInventory.Infrastructure.Data
         public DbSet<Car> Cars { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

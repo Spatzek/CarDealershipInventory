@@ -1,7 +1,9 @@
 ﻿using CarDealershipInventory.Core.Entity;
 using CarDealershipInventory.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CarDealershipInventory.Infrastructure.DataInitialization
@@ -10,9 +12,29 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
     {
         public void Initialize(CarDealershipInventoryContext ctx)
         {
-            ctx.Database.EnsureDeleted(); //ONLY in development //dont use when impl sql server
             ctx.Database.EnsureCreated();
             
+            if(ctx.Cars.Any())
+            {
+                ctx.Database.ExecuteSqlRaw("DROP TABLE Cars");
+                ctx.Database.EnsureCreated();
+            }
+            if (ctx.Models.Any())
+            {
+                ctx.Database.ExecuteSqlRaw("DROP TABLE Models");
+                ctx.Database.EnsureCreated();
+            }
+            if (ctx.Manufacturers.Any())
+            {
+                ctx.Database.ExecuteSqlRaw("DROP TABLE Manufacturers");
+                ctx.Database.EnsureCreated();
+            }
+            if (ctx.Users.Any())
+            {
+                ctx.Database.ExecuteSqlRaw("DROP TABLE Users");
+                ctx.Database.EnsureCreated();
+            }
+
             // Fabrikanter
             Manufacturer placeholder = ctx.Manufacturers.Add(new Manufacturer
             {
