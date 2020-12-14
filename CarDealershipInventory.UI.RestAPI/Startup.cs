@@ -81,7 +81,7 @@ namespace CarDealershipInventory.UI.RestAPI
             services.AddScoped<ICarValidator, CarValidator>();
             services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
             services.AddScoped<IManufacturerService, ManufacturerService>();
-            services.AddTransient<IDataInitializer, SqlServerInitializer>();
+            //services.AddTransient<IDataInitializer, SqlServerInitializer>();
 
 
             services.AddControllers();
@@ -95,25 +95,12 @@ namespace CarDealershipInventory.UI.RestAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
+            using (var scope = app.ApplicationServices.CreateScope())
             {
-                app.UseDeveloperExceptionPage();
-                using (var scope = app.ApplicationServices.CreateScope())
-                {
-                    var ctx = scope.ServiceProvider.GetService<CarDealershipInventoryContext>();
-                    var db = scope.ServiceProvider.GetService<IDataInitializer>();
-                    db.Initialize(ctx);
-                }
-            }
-            else
-            {
-                app.UseDeveloperExceptionPage();
-                using (var scope = app.ApplicationServices.CreateScope())
-                {
-                    var ctx = scope.ServiceProvider.GetService<CarDealershipInventoryContext>();
-                    var db = scope.ServiceProvider.GetService<IDataInitializer>();
-                    db.Initialize(ctx);
-                }
+                var ctx = scope.ServiceProvider.GetService<CarDealershipInventoryContext>();
+                var db = scope.ServiceProvider.GetService<IDataInitializer>();
+                db.Initialize(ctx);
             }
 
             app.UseHttpsRedirection();
