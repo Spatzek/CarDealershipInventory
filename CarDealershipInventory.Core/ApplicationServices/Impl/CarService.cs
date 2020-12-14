@@ -25,10 +25,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
 
         public Car CreateCar(Car car)
         {
-            if (_carValidator != null)
-            {
-                _carValidator.ValidateCar(car);
-            }
+             _carValidator.ValidateCar(car);            
             return _carRepository.CreateCar(car);
         }
         public Car DeleteCar(int id)
