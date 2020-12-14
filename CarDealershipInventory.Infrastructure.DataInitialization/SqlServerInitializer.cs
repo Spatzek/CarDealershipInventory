@@ -18,23 +18,21 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             if (ctx.Cars.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Cars");
-                ctx.Database.EnsureCreated();
             }
             if (ctx.Models.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Models");
-                ctx.Database.EnsureCreated();
             }
             if (ctx.Manufacturers.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Manufacturers");
-                ctx.Database.EnsureCreated();
             }
             if (ctx.Users.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Users");
-                ctx.Database.EnsureCreated();
             }
+
+            ctx.Database.EnsureCreated();
 
             //// Fabrikanter
             //Manufacturer placeholder = ctx.Manufacturers.Add(new Manufacturer
