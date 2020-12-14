@@ -22,7 +22,6 @@ namespace CarDealershipInventory.Core.Entity
         public double SoldPrice { get; set; }
         public double VAT { get; set; }
         public bool IsSold { get; set; }
-        public int DaysInInventory { get; set; }
-        public int CarlId { get; set; }
+        public int DaysInInventory { get; set; }        
     }
 }

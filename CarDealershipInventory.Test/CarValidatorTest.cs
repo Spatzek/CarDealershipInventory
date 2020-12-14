@@ -30,14 +30,16 @@ namespace CarDealershipInventory.Test
             car = new Car();
         }
 
-        [Fact]
-        public void CarIsNull_ExpectArgumentException()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void CarIsNull_ExpectArgumentException(bool isUpdate)
         {
             car = null;
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateCar(car);
+                validator.ValidateCar(car, isUpdate);
             });
             Assert.Equal("Car to validate is missing", ex.Message);
             Assert.Null(car);

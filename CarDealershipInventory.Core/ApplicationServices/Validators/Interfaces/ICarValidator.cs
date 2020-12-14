@@ -8,10 +8,9 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces
 {
     public interface ICarValidator
     {
-        public void ValidateCar(Car car);
-
-        public void ValidateCarModel(int modelId);
-
+        public void ValidateCar(Car car, bool isUpdate);
+        public void ValidateCarId(int carId);
+        public void ValidateCarModel(int modelId);        
         public void ValidateNumberIsNonNegative(double number, string property);
         public void ValidateTextIsNotNullOrEmpty(string text, string property);
         public void ValidateDateIsNotInFuture(DateTime? date, string property);
