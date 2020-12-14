@@ -56,20 +56,20 @@ namespace CarDealershipInventory.UI.RestAPI
                 opt =>
                 {
                     opt.UseLoggerFactory(loggerFactory)
-                    .UseSqlite("Data Source=cardealershipinventory.db");
-                    services.AddTransient<IDataInitializer, SqlLiteInitializer>();
+                    .UseSqlite("Data Source=cardealershipinventory.db");                    
                 }, ServiceLifetime.Transient
                 );
+                services.AddTransient<IDataInitializer, SqlLiteInitializer>();
             }
             else
             {
                 services.AddDbContext<CarDealershipInventoryContext>(
                 opt =>
                 {
-                    opt.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));
-                    services.AddTransient<IDataInitializer, SqlServerInitializer>();
+                    opt.UseSqlServer(Configuration.GetConnectionString("defaultConnection"));                    
                 }
                 );
+                services.AddTransient<IDataInitializer, SqlServerInitializer>();
             }
 
             services.AddScoped<ICarRepository, CarRepository>();
@@ -80,9 +80,7 @@ namespace CarDealershipInventory.UI.RestAPI
             services.AddScoped<IManufacturerValidator, ManufacturerValidator>();
             services.AddScoped<ICarValidator, CarValidator>();
             services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
-            services.AddScoped<IManufacturerService, ManufacturerService>();
-            //services.AddTransient<IDataInitializer, SqlServerInitializer>();
-
+            services.AddScoped<IManufacturerService, ManufacturerService>();          
 
             services.AddControllers();
 
