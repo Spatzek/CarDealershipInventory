@@ -28,7 +28,7 @@ namespace CarDealershipInventory.Infrastructure.Data
                 .HasOne(m => m.Manufacturer)
                 .WithMany(m => m.Models)
                 .HasForeignKey(m => new { m.ManufacturerId })
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
