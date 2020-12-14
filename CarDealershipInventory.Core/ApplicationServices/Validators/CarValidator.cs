@@ -18,11 +18,15 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             _modelRepository = modelRepository;
         }
 
-        public void ValidateCar(Car car)
+        public void ValidateCar(Car car, bool isUpdate)
         {
             if (car == null)
             {
                 throw new ArgumentException("Car to validate is missing");
+            }
+            if(!isUpdate)
+            {
+                ValidateCarId(car.CarId);
             }
             ValidateCarModel(car.ModelId);
             ValidateNumberIsNonNegative(car.Key, "Key number");
@@ -38,6 +42,14 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             ValidateDateOfSaleIsNotBeforeDateOfPurchase(car.DateOfPurchase, car.DateOfSale);
             ValidateNumberIsNonNegative(car.SoldPrice, "Sold price");
             ValidateNumberIsNonNegative(car.VAT, "Value added tax");
+        }
+
+        public void ValidateCarId(int carId)
+        {
+            if (_carRepository.ReadCarById(carId) != null)
+            {
+                throw new ArgumentException("This car ID is already in use by another car");
+            }
         }
 
         public void ValidateCarModel(int modelId)
