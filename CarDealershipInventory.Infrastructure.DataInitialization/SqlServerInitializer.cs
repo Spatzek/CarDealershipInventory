@@ -41,11 +41,11 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             //}).Entity;
             //ctx.SaveChanges();
 
-            //Manufacturer kia = ctx.Manufacturers.Add(new Manufacturer
-            //{
-            //    Name = "Kia"
-            //}).Entity;
-            //ctx.SaveChanges();
+            Manufacturer kia = ctx.Manufacturers.Add(new Manufacturer
+            {
+                Name = "Kia"
+            }).Entity;
+            ctx.SaveChanges();
 
             //Manufacturer ford = ctx.Manufacturers.Add(new Manufacturer
             //{
@@ -129,12 +129,12 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             //#endregion
 
             //// modeller
-            //Model picanto = ctx.Models.Add(new Model
-            //{
-            //    Name = "Picanto",
-            //    ManufacturerId = 2
-            //}).Entity;
-            //ctx.SaveChanges();
+            Model picanto = ctx.Models.Add(new Model
+            {
+                Name = "Picanto",
+                ManufacturerId = 2
+            }).Entity;
+            ctx.SaveChanges();
 
             //Model ceed = ctx.Models.Add(new Model
             //{
@@ -180,24 +180,24 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
 
 
 
-            //Car car1 = ctx.Cars.Add(new Car
-            //{
-            //    Key = 1,
-            //    ModelId = 8,
-            //    Location = "Hal 2",
-            //    Kilometers = 155000,
-            //    ProductionYear = 2010,
-            //    LicensePlate = "AA11223",
-            //    DateOfPurchase = DateTime.Parse("1/1/2020", new CultureInfo("da-DK")),
-            //    PurchasePrice = 19000,
-            //    CurrentPrice = 24000,
-            //    DateOfSale = DateTime.Parse("1/2/2020", new CultureInfo("da-DK")),
-            //    SoldPrice = 23000,
-            //    VAT = 1000,
-            //    IsSold = true,
-            //    DaysInInventory = 30,
-            //    LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
-            //}).Entity;
+            Car car1 = ctx.Cars.Add(new Car
+            {
+                Key = 1,
+                ModelId = 8,
+                Location = "Hal 2",
+                Kilometers = 155000,
+                ProductionYear = 2010,
+                LicensePlate = "AA11223",
+                DateOfPurchase = DateTime.Parse("1/1/2020", new CultureInfo("da-DK")),
+                PurchasePrice = 19000,
+                CurrentPrice = 24000,
+                DateOfSale = DateTime.Parse("1/2/2020", new CultureInfo("da-DK")),
+                SoldPrice = 23000,
+                VAT = 1000,
+                IsSold = true,
+                DaysInInventory = 30,
+                LastInspection = DateTime.Parse("10/10/2018", new CultureInfo("da-DK"))
+            }).Entity;
 
             //Car car2 = ctx.Cars.Add(new Car
             //{
