@@ -1,5 +1,6 @@
 ﻿using CarDealershipInventory.Core.ApplicationServices;
 using CarDealershipInventory.Core.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // GET: api/<ManufacturersController>
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<Manufacturer>> Get()
         {
@@ -36,6 +38,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // GET api/<ManufacturersController>/5
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Manufacturer> Get(int id)
         {
@@ -54,6 +57,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // POST api/<ManufacturersController>
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public ActionResult<Manufacturer> Post([FromBody] Manufacturer manufacturer)
         {
@@ -72,12 +76,14 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // PUT api/<ManufacturersController>/5
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/<ManufacturersController>/5
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public ActionResult<Manufacturer> Delete(int id)
         {

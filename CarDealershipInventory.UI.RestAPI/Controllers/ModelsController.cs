@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CarDealershipInventory.Core.ApplicationServices;
 using CarDealershipInventory.Core.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,6 +22,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // GET: api/<ModelsController>
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<Model>> Get()
         {
@@ -28,6 +30,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // GET api/<ModelsController>/5
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Model> Get(int id)
         {
@@ -35,6 +38,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // POST api/<ModelsController>
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public ActionResult<Model> Post([FromBody] Model model)
         {
@@ -42,6 +46,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // PUT api/<ModelsController>/5
+        [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
         public ActionResult<Model> Put(int id, [FromBody] Model model)
         {
@@ -49,6 +54,7 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         }
 
         // DELETE api/<ModelsController>/5
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
         public ActionResult<Model> Delete(int id)
         {

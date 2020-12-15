@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.Entity;
+﻿using CarDealershipInventory.Core.DomainServices;
+using CarDealershipInventory.Core.Entity;
 using CarDealershipInventory.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,10 +12,41 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
 {
     public class SqlLiteInitializer : IDataInitializer
     {
+        private IAuthenticationHelper _authHelper;
+
+        public SqlLiteInitializer(IAuthenticationHelper authenticationHelper)
+        {
+            _authHelper = authenticationHelper;
+        }
+
         public void Initialize(CarDealershipInventoryContext ctx)
         {
             ctx.Database.EnsureDeleted();
-            ctx.Database.EnsureCreated();            
+            ctx.Database.EnsureCreated();
+
+            //users
+            string password = "password";
+            byte[] passwordHashAdmin, passwordSaltAdmin, passwordHashStandard, passwordSaltStandard;
+            _authHelper.CreatePasswordHash(password, out passwordHashAdmin, out passwordSaltAdmin);
+            _authHelper.CreatePasswordHash(password, out passwordHashStandard, out passwordSaltStandard);
+
+            User admin = ctx.Users.Add(new User
+            {
+                Username = "AdminUser",
+                PasswordHash = passwordHashAdmin,
+                PasswordSalt = passwordSaltAdmin,
+                IsAdmin = true
+            }).Entity;
+
+            User standard = ctx.Users.Add(new User
+            {
+                Username = "StandardUser",
+                PasswordHash = passwordHashStandard,
+                PasswordSalt = passwordSaltStandard,
+                IsAdmin = false
+            }).Entity;
+
+            ctx.SaveChanges();
 
             // Fabrikanter
             Manufacturer placeholder = ctx.Manufacturers.Add(new Manufacturer

@@ -9,7 +9,9 @@ using CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces;
 using CarDealershipInventory.Core.DomainServices;
 using CarDealershipInventory.Infrastructure.Data;
 using CarDealershipInventory.Infrastructure.Data.Repositories;
+using CarDealershipInventory.Infrastructure.Data.Security;
 using CarDealershipInventory.Infrastructure.DataInitialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace CarDealershipInventory.UI.RestAPI
@@ -37,6 +40,23 @@ namespace CarDealershipInventory.UI.RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Byte[] secretBytes = new byte[40];
+            Random rand = new Random();
+            rand.NextBytes(secretBytes);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(secretBytes),
+                    ValidateLifetime = true, //validate the expiration and not before values in the token
+                    ClockSkew = TimeSpan.FromMinutes(5) //5 minute tolerance for the expiration date
+                };
+            });
+
             services.AddCors(options =>
                 options.AddDefaultPolicy(
                     builder =>
@@ -72,6 +92,8 @@ namespace CarDealershipInventory.UI.RestAPI
                 services.AddTransient<IDataInitializer, SqlServerInitializer>();
             }
 
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<IModelRepository, ModelRepository>();
@@ -80,7 +102,10 @@ namespace CarDealershipInventory.UI.RestAPI
             services.AddScoped<IManufacturerValidator, ManufacturerValidator>();
             services.AddScoped<ICarValidator, CarValidator>();
             services.AddScoped<IManufacturerRepository, ManufacturerRepository>();
-            services.AddScoped<IManufacturerService, ManufacturerService>();          
+            services.AddScoped<IManufacturerService, ManufacturerService>();
+
+            services.AddSingleton<IAuthenticationHelper>(new
+                AuthenticationHelper(secretBytes));
 
             services.AddControllers();
 
@@ -106,6 +131,8 @@ namespace CarDealershipInventory.UI.RestAPI
             app.UseRouting();
 
             app.UseCors();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
