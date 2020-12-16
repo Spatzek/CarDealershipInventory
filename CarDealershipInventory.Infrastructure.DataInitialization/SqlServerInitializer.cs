@@ -1,4 +1,5 @@
-﻿using CarDealershipInventory.Core.Entity;
+﻿using CarDealershipInventory.Core.DomainServices;
+using CarDealershipInventory.Core.Entity;
 using CarDealershipInventory.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +12,13 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
 {
     public class SqlServerInitializer : IDataInitializer
     {
+        private IAuthenticationHelper _authHelper;
+
+        public SqlServerInitializer(IAuthenticationHelper authenticationHelper)
+        {
+            _authHelper = authenticationHelper;
+        }
+
         public void Initialize(CarDealershipInventoryContext ctx)
         {
             ctx.Database.EnsureCreated();
