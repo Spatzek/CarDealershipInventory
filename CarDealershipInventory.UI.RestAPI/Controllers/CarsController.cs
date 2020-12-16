@@ -52,6 +52,10 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
             {
                 return StatusCode(500, e.Message);
             }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<CarsController>/5

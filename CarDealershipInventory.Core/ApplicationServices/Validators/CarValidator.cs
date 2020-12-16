@@ -24,10 +24,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             {
                 throw new ArgumentException("Car to validate is missing");
             }
-            if(!isUpdate)
-            {
-                ValidateCarId(car.CarId);
-            }
+            ValidateCarId(car.CarId, isUpdate);
             ValidateCarModel(car.ModelId);
             ValidateNumberIsNonNegative(car.Key, "Key number");
             ValidateTextIsNotNullOrEmpty(car.Location, "Location");
@@ -44,12 +41,23 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
             ValidateNumberIsNonNegative(car.VAT, "Value added tax");
         }
 
-        public void ValidateCarId(int carId)
+        public void ValidateCarId(int carId, bool isUpdate)
         {
-            if (_carRepository.ReadCarById(carId) != null)
+            if (!isUpdate)
             {
-                throw new ArgumentException("This car ID is already in use by another car");
+                if (_carRepository.ReadCarById(carId) != null)
+                {
+                    throw new InvalidOperationException("Car ID can not match car which already exists");
+                }
             }
+            else
+            {
+                if (_carRepository.ReadCarById(carId) == null)
+                {
+                    throw new InvalidOperationException("Can not update car which does not exist");
+                }
+            }
+            
         }
 
         public void ValidateCarModel(int modelId)
