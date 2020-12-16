@@ -58,11 +58,21 @@ namespace CarDealershipInventory.UI.RestAPI
             });
 
             services.AddCors(options =>
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    })
+            {
+                options.AddPolicy(name: "CarDealershipDev",
+                   builder =>
+                   {
+                       builder.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                       .AllowAnyMethod().AllowAnyHeader();
+                   });
+                options.AddPolicy(name: "CarDealershipProd",
+                   builder =>
+                   {
+                       builder.WithOrigins("http://cardealershipinventorywebapp.azurewebsites.net/", "https://cardealershipinventorywebapp.azurewebsites.net/")
+                       .AllowAnyMethod().AllowAnyHeader();
+                   });
+            }
+               
             );
 
             var loggerFactory = LoggerFactory.Create(builder =>
@@ -118,6 +128,15 @@ namespace CarDealershipInventory.UI.RestAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseCors("CarDealershipDev");
+            }
+            else
+            {
+                app.UseCors("CarDealershipProd");
+            }
+
             app.UseDeveloperExceptionPage();
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -128,9 +147,7 @@ namespace CarDealershipInventory.UI.RestAPI
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
-            app.UseCors();
+            app.UseRouting();            
 
             app.UseAuthentication();
 
