@@ -26,7 +26,15 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Model>> Get()
         {
-            return Ok(_modelService.GetAllModels());
+            try
+            {
+                return Ok(_modelService.GetAllModels());
+            }
+            catch (NullReferenceException e)
+            {
+                return StatusCode(404, e.Message);
+            }
+            
         }
 
         // GET api/<ModelsController>/5
@@ -34,7 +42,19 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<Model> Get(int id)
         {
-            return Ok(_modelService.GetModelById(id));
+            try
+            {
+                return Ok(_modelService.GetModelById(id));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (NullReferenceException e)
+            {
+                return StatusCode(404, e.Message);
+            }
+
         }
 
         // POST api/<ModelsController>
@@ -42,7 +62,18 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpPost]
         public ActionResult<Model> Post([FromBody] Model model)
         {
-            return Ok(_modelService.CreateModel(model));
+            try
+            {
+                return Ok(_modelService.CreateModel(model));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<ModelsController>/5
@@ -50,7 +81,23 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpPut("{id}")]
         public ActionResult<Model> Put(int id, [FromBody] Model model)
         {
-            return Ok(_modelService.EditModel(model));
+            if (id != model.ModelId)
+            {
+                return StatusCode(500, "ID of path and model do not match");
+            }
+
+            try
+            {
+                return Ok(_modelService.EditModel(model));
+            }            
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // DELETE api/<ModelsController>/5
@@ -58,7 +105,19 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Model> Delete(int id)
         {
-            return Ok(_modelService.DeleteModel(id));
+            try
+            {
+                return Ok(_modelService.DeleteModel(id));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
         }
     }
 }

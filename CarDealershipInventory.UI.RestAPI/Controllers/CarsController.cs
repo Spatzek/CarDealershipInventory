@@ -28,7 +28,15 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Car>> Get()
         {
-            return Ok(_carService.GetAllCars());
+            try
+            {
+                return Ok(_carService.GetAllCars());
+            }
+            catch (NullReferenceException e)
+            {
+                return StatusCode(404, e.Message);
+            }
+            
         }
 
         // GET api/<CarsController>/5
@@ -36,7 +44,15 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<Car> Get(int id)
         {
-            return Ok(_carService.GetCarById(id));
+            try
+            {
+                return Ok(_carService.GetCarById(id));
+            }
+            catch (NullReferenceException e)
+            {
+                return StatusCode(404, e.Message);
+            }
+            
         }
 
         // POST api/<CarsController>
