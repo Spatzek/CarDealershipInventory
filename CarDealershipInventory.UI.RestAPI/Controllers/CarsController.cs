@@ -64,8 +64,17 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
         // DELETE api/<CarsController>/5
         [Authorize(Roles = "Administrator")]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public ActionResult<Car> Delete(int id)
         {
+            try
+            {
+                return Ok(_carService.DeleteCar(id));
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            
         }
     }
 }

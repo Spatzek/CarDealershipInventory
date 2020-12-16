@@ -45,16 +45,6 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         {
             Car car = ReadCarById(id);
 
-            car = null;
-
-            List<Car> cars = _ctx.Cars.Where(m => m.CarId == id).ToList();
-            foreach (Car _car in cars)
-            {
-                car = null;
-                _car.CarId = 0;
-            }
-
-
             _ctx.Cars.Remove(car);
             _ctx.SaveChanges();
 
