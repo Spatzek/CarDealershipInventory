@@ -29,6 +29,7 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
             return _ctx.Models
                 .AsNoTracking()
                 .Include(m => m.Manufacturer)
+                .Where(m => m.Name != "Default")
                 .ToList();
         }
 
