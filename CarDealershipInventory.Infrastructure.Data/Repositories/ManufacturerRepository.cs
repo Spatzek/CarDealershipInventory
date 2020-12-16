@@ -21,6 +21,7 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         {
             return _ctx.Manufacturers
                 .AsNoTracking()
+                .Where(m => m.Name != "Default")
                 .ToList();
         }
 
@@ -28,12 +29,13 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
         {
             return _ctx.Manufacturers
                 .AsNoTracking()
-                .Include(m => m.Models)
+                .Include(m => m.Models.Where(m => m.Name != "Default"))
                 .FirstOrDefault(m => m.ManufacturerId == id);
         }
 
         public Manufacturer AddManufacturer(Manufacturer manufacturer)
         {
+            // not fully implemented, should also add default model
             var entry = _ctx.Add(manufacturer);
             _ctx.SaveChanges();
             return entry.Entity;
@@ -46,6 +48,7 @@ namespace CarDealershipInventory.Infrastructure.Data.Repositories
 
         public Manufacturer RemoveManufacturer(int id)
         {
+            // not fully implemented, should also set cars to default manifacturer and default model
             var entry = _ctx.Remove(new Manufacturer { ManufacturerId = id });
             _ctx.SaveChanges();
             return entry.Entity;

@@ -26,6 +26,7 @@ namespace CarDealershipInventory.Test
             modelRepoMock = new Mock<IModelRepository>();
             carRepoMock.Setup(repo => repo.ReadAllCars()).Returns(() => cars);
             modelRepoMock.Setup(repo => repo.ReadModelById(It.IsAny<int>())).Returns((int id) => models.FirstOrDefault(c => c.ModelId == id));
+            carRepoMock.Setup(repo => repo.ReadCarById(It.IsAny<int>())).Returns((int id) => cars.FirstOrDefault(c => c.CarId == id));
             validator = new CarValidator(modelRepoMock.Object, carRepoMock.Object);
             car = new Car();
         }
@@ -239,6 +240,49 @@ namespace CarDealershipInventory.Test
                 validator.ValidateNumberIsNonNegative(car.VAT, "Value added tax");
             });
             Assert.Equal("Value added tax can not be negative", ex.Message);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void ValidateCarId_CreateCarWithExistingId_ExpectInvalidOperationException(int carId)
+        {
+            cars = new List<Car>
+            {
+                new Car{ CarId = 1},
+                new Car{ CarId = 2},
+                new Car{ CarId = 3}
+            };
+
+            car.CarId = carId;
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                validator.ValidateCarId(car.CarId, false);
+            });
+            Assert.Equal("Car ID can not match car which already exists", ex.Message);
+        }
+
+        [Theory]
+        [InlineData(1)]        
+        [InlineData(5)]
+        public void ValidateCarId_UpdateNonExistingCar_ExpectInvalidOperationException(int carId)
+        {
+            cars = new List<Car>
+            {
+                new Car{ CarId = 2},
+                new Car{ CarId = 3},
+                new Car{ CarId = 4}
+            };
+
+            car.CarId = carId;
+
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+            {
+                validator.ValidateCarId(car.CarId, true);
+            });
+            Assert.Equal("Can not update car which does not exist", ex.Message);
         }
 
 
