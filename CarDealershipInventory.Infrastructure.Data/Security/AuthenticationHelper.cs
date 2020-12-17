@@ -58,7 +58,7 @@ namespace CarDealershipInventory.Infrastructure.Data.Security
                                null, // audience - not needed (ValidateAudience = false)
                                claims.ToArray(),
                                DateTime.Now,               // notBefore
-                               DateTime.Now.AddMinutes(10)));  // expires
+                               DateTime.Now.AddMinutes(2880)));  // expires -- 2 days
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
