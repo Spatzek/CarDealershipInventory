@@ -43,6 +43,30 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
 
             ctx.Database.EnsureCreated();
 
+            //users
+            string password = "password";
+            byte[] passwordHashAdmin, passwordSaltAdmin, passwordHashStandard, passwordSaltStandard;
+            _authHelper.CreatePasswordHash(password, out passwordHashAdmin, out passwordSaltAdmin);
+            _authHelper.CreatePasswordHash(password, out passwordHashStandard, out passwordSaltStandard);
+
+            User admin = ctx.Users.Add(new User
+            {
+                Username = "AdminUser",
+                PasswordHash = passwordHashAdmin,
+                PasswordSalt = passwordSaltAdmin,
+                IsAdmin = true
+            }).Entity;
+
+            User standard = ctx.Users.Add(new User
+            {
+                Username = "StandardUser",
+                PasswordHash = passwordHashStandard,
+                PasswordSalt = passwordSaltStandard,
+                IsAdmin = false
+            }).Entity;
+
+            ctx.SaveChanges();
+
             // Fabrikanter
             Manufacturer placeholder = ctx.Manufacturers.Add(new Manufacturer
             {
