@@ -23,6 +23,7 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
         {
             ctx.Database.EnsureCreated();
 
+
             if (ctx.Cars.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Cars");

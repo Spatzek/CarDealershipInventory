@@ -137,7 +137,7 @@ namespace CarDealershipInventory.UI.RestAPI
                 app.UseCors("CarDealershipProd");
             }
 
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var ctx = scope.ServiceProvider.GetService<CarDealershipInventoryContext>();
