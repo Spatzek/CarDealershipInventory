@@ -21,8 +21,8 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
 
         public void Initialize(CarDealershipInventoryContext ctx)
         {
-            ctx.Database.EnsureCreated();
-
+            /* ctx.Database.EnsureCreated();
+        
 
             if (ctx.Cars.Any())
             {
@@ -39,8 +39,9 @@ namespace CarDealershipInventory.Infrastructure.DataInitialization
             if (ctx.Users.Any())
             {
                 ctx.Database.ExecuteSqlRaw("DROP TABLE Users");
-            }
+            }*/
 
+            ctx.Database.ExecuteSqlRaw("DROP TABLE IF EXISTS dbo.Cars, dbo.Models, dbo.Manufacturers, dbo.Users");
             ctx.Database.EnsureCreated();
 
             //users
