@@ -68,7 +68,7 @@ namespace CarDealershipInventory.UI.RestAPI
                 options.AddPolicy(name: "CarDealershipProd",
                    builder =>
                    {
-                       builder.WithOrigins("http://cardealershipinventorywebapp.azurewebsites.net/", "https://cardealershipinventorywebapp.azurewebsites.net/")
+                       builder.WithOrigins("http://cardealershipinventorywebapp.azurewebsites.net", "https://cardealershipinventorywebapp.azurewebsites.net")
                        .AllowAnyMethod().AllowAnyHeader();
                    });
             }
