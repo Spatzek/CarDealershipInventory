@@ -11,6 +11,7 @@ namespace CarDealershipInventory.Core.DomainServices
         public Car CreateCar(Car car);
         public List<Car> ReadAllCars();
         public Car ReadCarById(int id);
+        public Car UpdateCar(Car car);
         public Car RemoveCar(int id);
     }
 

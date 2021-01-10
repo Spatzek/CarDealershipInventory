@@ -16,6 +16,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators.Interfaces
         public void ValidateDateIsNotInFuture(DateTime? date, string property);
         public void ValidateDateIsNotNull(DateTime? date, string property);
         public void ValidateProductionYear(int year);
+        public void ValidateDateIsNotBeforeProductionYear(DateTime? date, int year, string property);
         public void ValidateDateOfSaleIsNotBeforeDateOfPurchase(DateTime? purchaseDate, DateTime? saleDate);
 
 

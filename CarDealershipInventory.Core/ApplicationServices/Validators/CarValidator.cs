@@ -22,23 +22,25 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {
             if (car == null)
             {
-                throw new ArgumentException("Car to validate is missing");
+                throw new ArgumentException("Bil til validering mangler");
             }
             ValidateCarId(car.CarId, isUpdate);
             ValidateCarModel(car.ModelId);
-            ValidateNumberIsNonNegative(car.Key, "Key number");
-            ValidateTextIsNotNullOrEmpty(car.Location, "Location");
-            ValidateDateIsNotInFuture(car.LastInspection, "Last inspection date");
-            ValidateNumberIsNonNegative(car.Kilometers, "Kilometers");
+            ValidateNumberIsNonNegative(car.Key, "Nøgle");
+            ValidateTextIsNotNullOrEmpty(car.Location, "Lokation");
             ValidateProductionYear(car.ProductionYear);
-            ValidateTextIsNotNullOrEmpty(car.LicensePlate, "License plate");
-            ValidateDateIsNotNull(car.DateOfPurchase, "Date of purchase");
-            ValidateDateIsNotInFuture(car.DateOfPurchase, "Date of purchase");
-            ValidateNumberIsNonNegative(car.PurchasePrice, "Purchase price");
-            ValidateNumberIsNonNegative(car.CurrentPrice, "Current price");
+            ValidateDateIsNotInFuture(car.LastInspection, "Sidste synsdato");
+            ValidateDateIsNotBeforeProductionYear(car.LastInspection, car.ProductionYear, "Sidste synsdato");
+            ValidateNumberIsNonNegative(car.Kilometers, "Kilometertal");            
+            ValidateTextIsNotNullOrEmpty(car.LicensePlate, "Nummerplade");
+            ValidateDateIsNotNull(car.DateOfPurchase, "Købsdato");
+            ValidateDateIsNotBeforeProductionYear(car.DateOfPurchase, car.ProductionYear, "Købsdato");
+            ValidateDateIsNotInFuture(car.DateOfPurchase, "Købsdato");
+            ValidateNumberIsNonNegative(car.PurchasePrice, "Købspris");
+            ValidateNumberIsNonNegative(car.CurrentPrice, "Nu-pris");
             ValidateDateOfSaleIsNotBeforeDateOfPurchase(car.DateOfPurchase, car.DateOfSale);
-            ValidateNumberIsNonNegative(car.SoldPrice, "Sold price");
-            ValidateNumberIsNonNegative(car.VAT, "Value added tax");
+            ValidateNumberIsNonNegative(car.SoldPrice, "Salgspris");
+            ValidateNumberIsNonNegative(car.VAT, "Moms");
         }
 
         public void ValidateCarId(int carId, bool isUpdate)
@@ -64,7 +66,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {            
             if (_modelRepository.ReadModelById(modelId) == null)
             {
-                throw new ArgumentException("Model with that ModelId was not found");
+                throw new ArgumentException("Model blev ikke fundet");
             }
         }
 
@@ -72,7 +74,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {
             if (number < 0)
             {
-                throw new ArgumentException($"{property} can not be negative");
+                throw new ArgumentException($"{property} kan ikke være negativ");
             }
         }
 
@@ -80,7 +82,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                throw new ArgumentException($"{property} information is missing or empty");
+                throw new ArgumentException($"{property} information mangler");
             }
         }
 
@@ -88,7 +90,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {
             if(date == null)
             {
-                throw new ArgumentException($"{property} must be defined");
+                throw new ArgumentException($"{property} skal defineres");
             }
         }
 
@@ -96,7 +98,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {
             if (date.HasValue && date.Value.Date > DateTime.Today.Date)
             {
-                throw new ArgumentException($"{property} can not be in the future");
+                throw new ArgumentException($"{property} kan ikke ligge i fremtiden");
             }
         }
 
@@ -106,7 +108,7 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
 
             if (year < firstCar || year > DateTime.Now.Year)
             {
-                throw new ArgumentException("Production year must in range between 1880 and this year");
+                throw new ArgumentException("Produktionsår skal ligge mellem 1880 og indeværende år");
             }
         }
 
@@ -114,7 +116,15 @@ namespace CarDealershipInventory.Core.ApplicationServices.Validators
         {
             if (purchaseDate.HasValue && saleDate.HasValue && purchaseDate.Value.Date > saleDate.Value.Date)
             {
-                throw new ArgumentException("Date of sale can not precede date of purchase");
+                throw new ArgumentException("Salgsdato kan ikke ligge forud for købsdato");
+            }
+        }
+
+        public void ValidateDateIsNotBeforeProductionYear(DateTime? date, int year, string property)
+        {
+            if(date.HasValue && date.Value.Year < year)
+            {
+                throw new ArgumentException($"{property} kan ikke ligge forud for produktionsår");
             }
         }
 

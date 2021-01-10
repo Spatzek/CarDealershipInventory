@@ -10,6 +10,7 @@ namespace CarDealershipInventory.Core.ApplicationServices
         public Car CreateCar(Car car);
         public List<Car> GetAllCars();
         public Car GetCarById(int id);
+        public Car EditCar(Car car);
         public Car DeleteCar(int carId);
 
     }

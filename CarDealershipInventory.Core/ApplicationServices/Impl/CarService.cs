@@ -28,9 +28,42 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             if (_carValidator != null)
             {
                 _carValidator.ValidateCar(car, false);
-            }                      
+            }
+            car.DaysInInventory = GetDaysInInventory(car);
+            car.IsSold = GetSoldStatus(car);
             return _carRepository.CreateCar(car);
         }
+
+        public int GetDaysInInventory(Car car)
+        {
+            int days;
+
+            if (car.DateOfSale != null)
+            {
+                days = (car.DateOfSale.Value - car.DateOfPurchase.Value).Days;
+            }
+            else
+            {
+                days = (DateTime.Today - car.DateOfPurchase.Value).Days;
+            }
+            return days;
+        }
+
+        public bool GetSoldStatus(Car car)
+        {
+            bool sold;
+
+            if (car.DateOfSale != null)
+            {
+                sold = true;
+            }
+            else
+            {
+                sold = false;
+            }
+            return sold;
+        }
+
         public Car DeleteCar(int id)
         {
             if (id < 1)
@@ -51,6 +84,11 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             {
                 throw new NullReferenceException("Car list is null");
             }
+            foreach (var car in carList)
+            {
+                car.DaysInInventory = GetDaysInInventory(car);
+                car.IsSold = GetSoldStatus(car);
+            }
             return carList;
         }
 
@@ -62,7 +100,20 @@ namespace CarDealershipInventory.Core.ApplicationServices.Impl
             {
                 throw new NullReferenceException("Car was not found");
             }
+            car.DaysInInventory = GetDaysInInventory(car);
+            car.IsSold = GetSoldStatus(car);
             return car;
+        }
+
+        public Car EditCar(Car car)
+        {
+            if (_carValidator != null)
+            {
+                _carValidator.ValidateCar(car, true);
+            }
+            car.DaysInInventory = GetDaysInInventory(car);
+            car.IsSold = GetSoldStatus(car);
+            return _carRepository.UpdateCar(car);
         }
     }
 }

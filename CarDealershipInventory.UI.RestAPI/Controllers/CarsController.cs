@@ -16,9 +16,12 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
     public class CarsController : ControllerBase
     {
         private readonly ICarService _carService;
+        private readonly string _defaultMessage;
+
         public CarsController(ICarService carService)
         {
             _carService = carService;
+            _defaultMessage = "Noget gik galt";
         }
 
 
@@ -36,6 +39,10 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
             {
                 return StatusCode(404, e.Message);
             }
+            catch (Exception e)
+            {
+                return StatusCode(500, _defaultMessage);
+            }
             
         }
 
@@ -52,7 +59,11 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
             {
                 return StatusCode(404, e.Message);
             }
-            
+            catch (Exception e)
+            {
+                return StatusCode(500, _defaultMessage);
+            }
+
         }
 
         // POST api/<CarsController>
@@ -72,13 +83,38 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
             {
                 return StatusCode(500, e.Message);
             }
+            catch (Exception e)
+            {
+                return StatusCode(500, _defaultMessage);
+            }
         }
 
         // PUT api/<CarsController>/5
         [Authorize(Roles = "Administrator")]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public ActionResult<Car> Put(int id, [FromBody] Car car)
         {
+            if (id != car.CarId)
+            {
+                return StatusCode(500, "ID på sti og bil stemmer ikke overens");
+            }
+
+            try
+            {
+                return Ok(_carService.EditCar(car));
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _defaultMessage);
+            }
         }
 
         // DELETE api/<CarsController>/5
@@ -90,11 +126,19 @@ namespace CarDealershipInventory.UI.RestAPI.Controllers
             {
                 return Ok(_carService.DeleteCar(id));
             }
-            catch (Exception e)
+            catch (ArgumentException e)
             {
                 return StatusCode(500, e.Message);
             }
-            
+            catch (InvalidOperationException e)
+            {
+                return StatusCode(500, e.Message);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, _defaultMessage);
+            }
+
         }
     }
 }
