@@ -5,6 +5,7 @@ using CarDealershipInventory.Core.Entity;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Xunit;
@@ -42,7 +43,7 @@ namespace CarDealershipInventory.Test
             {
                 validator.ValidateCar(car, isUpdate);
             });
-            Assert.Equal("Car to validate is missing", ex.Message);
+            Assert.Equal("Bil til validering mangler", ex.Message);
             Assert.Null(car);
         }
 
@@ -62,7 +63,7 @@ namespace CarDealershipInventory.Test
             {
                 validator.ValidateCarModel(car.ModelId);
             });
-            Assert.Equal("Model with that ModelId was not found", ex.Message);
+            Assert.Equal("Model blev ikke fundet", ex.Message);
 
             modelRepoMock.Verify(repo => repo.ReadModelById(car.ModelId), Times.Once);
         }
@@ -74,9 +75,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateNumberIsNonNegative(car.Key, "Key number");
+                validator.ValidateNumberIsNonNegative(car.Key, "Nøgle");
             });
-            Assert.Equal("Key number can not be negative", ex.Message);
+            Assert.Equal("Nøgle kan ikke være negativ", ex.Message);
         }
 
         [Theory]
@@ -89,9 +90,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateTextIsNotNullOrEmpty(car.Location, "Location");
+                validator.ValidateTextIsNotNullOrEmpty(car.Location, "Lokation");
             });
-            Assert.Equal("Location information is missing or empty", ex.Message);
+            Assert.Equal("Lokation information mangler", ex.Message);
         }
 
         [Fact]
@@ -101,9 +102,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateDateIsNotInFuture(car.LastInspection, "Last inspection date");
+                validator.ValidateDateIsNotInFuture(car.LastInspection, "Sidste synsdato");
             });
-            Assert.Equal("Last inspection date can not be in the future", ex.Message);
+            Assert.Equal("Sidste synsdato kan ikke ligge i fremtiden", ex.Message);
         }
 
         [Fact]
@@ -113,9 +114,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateNumberIsNonNegative(car.Kilometers, "Kilometers");
+                validator.ValidateNumberIsNonNegative(car.Kilometers, "Kilometertal");
             });
-            Assert.Equal("Kilometers can not be negative", ex.Message);
+            Assert.Equal("Kilometertal kan ikke være negativ", ex.Message);
         }
 
         [Fact]       
@@ -127,7 +128,7 @@ namespace CarDealershipInventory.Test
             {
                 validator.ValidateProductionYear(car.ProductionYear);
             });
-            Assert.Equal("Production year must in range between 1880 and this year", ex.Message);
+            Assert.Equal("Produktionsår skal ligge mellem 1880 og indeværende år", ex.Message);
         }
 
         [Fact]
@@ -139,7 +140,7 @@ namespace CarDealershipInventory.Test
             {
                 validator.ValidateProductionYear(car.ProductionYear);
             });
-            Assert.Equal("Production year must in range between 1880 and this year", ex.Message);
+            Assert.Equal("Produktionsår skal ligge mellem 1880 og indeværende år", ex.Message);
         }
 
         [Theory]
@@ -152,9 +153,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateTextIsNotNullOrEmpty(car.LicensePlate, "License plate");
+                validator.ValidateTextIsNotNullOrEmpty(car.LicensePlate, "Nummerplade");
             });
-            Assert.Equal("License plate information is missing or empty", ex.Message);
+            Assert.Equal("Nummerplade information mangler", ex.Message);
         }
 
         [Fact]
@@ -164,9 +165,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateDateIsNotNull(car.DateOfPurchase, "Date of purchase");
+                validator.ValidateDateIsNotNull(car.DateOfPurchase, "Købsdato");
             });
-            Assert.Equal("Date of purchase must be defined", ex.Message);
+            Assert.Equal("Købsdato skal defineres", ex.Message);
         }
 
         [Fact]
@@ -176,9 +177,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateDateIsNotInFuture(car.DateOfPurchase, "Date of purchase");
+                validator.ValidateDateIsNotInFuture(car.DateOfPurchase, "Købsdato");
             });
-            Assert.Equal("Date of purchase can not be in the future", ex.Message);
+            Assert.Equal("Købsdato kan ikke ligge i fremtiden", ex.Message);
         }
 
         [Fact]
@@ -188,9 +189,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateNumberIsNonNegative(car.PurchasePrice, "Purchase price");
+                validator.ValidateNumberIsNonNegative(car.PurchasePrice, "Købspris");
             });
-            Assert.Equal("Purchase price can not be negative", ex.Message);
+            Assert.Equal("Købspris kan ikke være negativ", ex.Message);
         }
 
         [Fact]
@@ -200,9 +201,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateNumberIsNonNegative(car.CurrentPrice, "Current price");
+                validator.ValidateNumberIsNonNegative(car.CurrentPrice, "Nu-pris");
             });
-            Assert.Equal("Current price can not be negative", ex.Message);
+            Assert.Equal("Nu-pris kan ikke være negativ", ex.Message);
         }
 
         [Fact]
@@ -215,7 +216,7 @@ namespace CarDealershipInventory.Test
             {
                 validator.ValidateDateOfSaleIsNotBeforeDateOfPurchase(car.DateOfPurchase, car.DateOfSale);
             });
-            Assert.Equal("Date of sale can not precede date of purchase", ex.Message);
+            Assert.Equal("Salgsdato kan ikke ligge forud for købsdato", ex.Message);
         }
 
         [Fact]
@@ -225,9 +226,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateNumberIsNonNegative(car.SoldPrice, "Sold price");
+                validator.ValidateNumberIsNonNegative(car.SoldPrice, "Salgspris");
             });
-            Assert.Equal("Sold price can not be negative", ex.Message);
+            Assert.Equal("Salgspris kan ikke være negativ", ex.Message);
         }
 
         [Fact]
@@ -237,9 +238,9 @@ namespace CarDealershipInventory.Test
 
             var ex = Assert.Throws<ArgumentException>(() =>
             {
-                validator.ValidateNumberIsNonNegative(car.VAT, "Value added tax");
+                validator.ValidateNumberIsNonNegative(car.VAT, "Moms");
             });
-            Assert.Equal("Value added tax can not be negative", ex.Message);
+            Assert.Equal("Moms kan ikke være negativ", ex.Message);
         }
 
         [Theory]
@@ -285,6 +286,33 @@ namespace CarDealershipInventory.Test
             Assert.Equal("Can not update car which does not exist", ex.Message);
         }
 
+        [Fact]
+        public void ValidateDateIsNotBeforeProductionYear_DateOfPurchaseIsBeforeProductionYear_ExpectArgumentException()
+        {
+            car.CarId = 1;
+            car.ProductionYear = 2021;
+            car.DateOfPurchase = DateTime.Parse("31/12/2020", new CultureInfo("da-DK"));
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateDateIsNotBeforeProductionYear(car.DateOfPurchase, car.ProductionYear, "Købsdato");
+            });
+            Assert.Equal("Købsdato kan ikke ligge forud for produktionsår", ex.Message);
+        }
+
+        [Fact]
+        public void ValidateDateIsNotBeforeProductionYear_LastInspectionIsBeforeProductionYear_ExpectArgumentException()
+        {
+            car.CarId = 1;
+            car.ProductionYear = 2021;
+            car.LastInspection = DateTime.Parse("31/12/2020", new CultureInfo("da-DK"));
+
+            var ex = Assert.Throws<ArgumentException>(() =>
+            {
+                validator.ValidateDateIsNotBeforeProductionYear(car.LastInspection, car.ProductionYear, "Sidste synsdato");
+            });
+            Assert.Equal("Sidste synsdato kan ikke ligge forud for produktionsår", ex.Message);
+        }
 
 
 

@@ -52,7 +52,7 @@ namespace CarDealershipInventory.Test
             cars = new List<Car>();
             for (int i = 0; i < count; i++)
             {
-                cars.Add(new Car { CarId = i });
+                cars.Add(new Car { CarId = i, DateOfPurchase = DateTime.Now });
             }
 
             ICarService carService = new CarService(repoMock.Object, null);
@@ -87,9 +87,9 @@ namespace CarDealershipInventory.Test
         {
             cars = new List<Car>();
 
-            cars.Add(new Car { CarId = carId, ModelId = modelId });
-            cars.Add(new Car { CarId = carId, ModelId = modelId });
-            cars.Add(new Car { CarId = carId, ModelId = modelId });
+            cars.Add(new Car { CarId = 1, ModelId = 1, DateOfPurchase = DateTime.Now });
+            cars.Add(new Car { CarId = 2, ModelId = 5, DateOfPurchase = DateTime.Now });
+            cars.Add(new Car { CarId = 3, ModelId = 3, DateOfPurchase = DateTime.Now });
 
             ICarService carService = new CarService(repoMock.Object, null);
 
@@ -196,7 +196,8 @@ namespace CarDealershipInventory.Test
             Car car = new Car
             {
                 CarId = carId,
-                ModelId = modelId
+                ModelId = modelId,
+                DateOfPurchase = DateTime.Now
             };
 
             Car createdCar = carService.CreateCar(car);
